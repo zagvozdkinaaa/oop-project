@@ -2,126 +2,71 @@ package core;
 
 import enums.UserRole;
 
-/**
- * 
- */
-public abstract class User {
+import java.io.Serializable;
+import java.util.Objects;
 
-    /**
-     * Default constructor
-     */
-    public User() {
-    }
+public abstract class User implements Serializable {
 
-    /**
-     * 
-     */
-    private int id;
-
-    /**
-     * 
-     */
-    private String name;
-
-    /**
-     * 
-     */
+    private static final long serialVersionUID = 1L;
+    private String id;
     private String firstName;
-
-    /**
-     * 
-     */
     private String lastName;
-
-    /**
-     * 
-     */
     private String email;
-
-    /**
-     * 
-     */
     private String password;
-
-    /**
-     * 
-     */
     private UserRole role;
 
-    /**
-     * @param login 
-     * @param password 
-     * @return
-     */
+    public User(String id, String firstName, String lastName, String email, String password, UserRole role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
     public boolean login(String login, String password) {
-        // TODO implement here
-        return false;
+        return this.email.equals(email) && this.password.equals(password);
     }
 
-    /**
-     * @return
-     */
     public void logout() {
-        // TODO implement here
-        return null;
+        System.out.println(getFullName() + " logged out.");
     }
 
-    /**
-     * @return
-     */
     public String getUserId() {
-        // TODO implement here
-        return "";
+        return id;
     }
 
-    /**
-     * @return
-     */
-    public String getLogin() {
-        // TODO implement here
-        return "";
+    public String getEmail() {
+        return email;
     }
 
-    /**
-     * @param password 
-     * @return
-     */
     public void setPassword(String password) {
-        // TODO implement here
-        return null;
+        this.password = password;
     }
 
-    /**
-     * @return
-     */
     public String getFullName() {
-        // TODO implement here
-        return "";
+        return firstName + " " + lastName;
     }
 
-    /**
-     * @param o 
-     * @return
-     */
+    public UserRole getRole() {
+        return role;
+    }
+
+    @Override
     public boolean equals(Object o) {
-        // TODO implement here
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
     }
 
-    /**
-     * @return
-     */
+    @Override
     public int hashCode() {
-        // TODO implement here
-        return 0;
+        return Objects.hash(id, email);
     }
 
-    /**
-     * @return
-     */
+    @Override
     public String toString() {
-        // TODO implement here
-        return "";
+        return String.format("User[ID='%s', Name='%s', Role=%s]", id, getFullName(), role);
     }
-
 }

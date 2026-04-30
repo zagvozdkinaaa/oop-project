@@ -1,66 +1,50 @@
 package core;
 
+import enums.UserRole;
+import services.Message;
+import users.Manager;
+
 import java.util.*;
 
-/**
- * 
- */
 public abstract class Employee extends User {
 
-    /**
-     * Default constructor
-     */
-    public Employee() {
-    }
-
-    /**
-     * 
-     */
     private double salary;
-
-    /**
-     * 
-     */
     private Date hireDate;
+    private List<Message> messages;
 
+    public Employee(String id, String firstName, String lastName, String email, String password,
+                    UserRole role, double salary) {
+        super(id, firstName, lastName, email, password, role);
+        this.salary = salary;
+        this.hireDate = new Date();
+        this.messages = new ArrayList<>();
+    }
 
-
-
-
-    /**
-     * @return
-     */
     public double getSalary() {
-        // TODO implement here
-        return 0.0d;
+        return salary;
     }
 
-    /**
-     * @param to 
-     * @param text 
-     * @return
-     */
     public void sendMessage(Employee to, String text) {
-        // TODO implement here
-        return null;
+        Message msg = new Message(this, to, text);
+        to.receiveMessage(msg);
     }
 
-    /**
-     * @return
-     */
+    public void receiveMessage(Message msg) {
+        if (this.messages == null) {
+            this.messages = new ArrayList<>();
+        }
+        this.messages.add(msg);
+    }
+
     public List<Message> getMessages() {
-        // TODO implement here
-        return null;
+        return messages;
     }
 
-    /**
-     * @param to 
-     * @param text 
-     * @return
-     */
-    public void sendComplaint(Manager to, String text) {
-        // TODO implement here
-        return null;
+    public void sendComplaint(Employee to, String text) {
+        if (to.getRole() == enums.UserRole.MANAGER) {
+            this.sendMessage(to, "COMPLAINT: " + text);
+        } else {
+            throw new IllegalArgumentException("Complaints can only be sent to Managers!");
+        }
     }
-
 }

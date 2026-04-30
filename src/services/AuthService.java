@@ -1,82 +1,47 @@
 package services;
 
+import core.Database;
 import core.User;
 
-/**
- * 
- */
 public class AuthService {
 
-    /**
-     * Default constructor
-     */
-    public AuthService() {
-    }
+    private static AuthService instance;
 
-    /**
-     * 
-     */
-    private AuthService  {static} instance;
-
-    /**
-     * 
-     */
     private User currentUser;
 
-    /**
-     * 
-     */
-    public void Operation1() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
     private AuthService() {
-        // TODO implement here
+    }
+    public static AuthService getInstance() {
+        if (instance == null) {
+            instance = new AuthService();
+        }
+        return instance;
     }
 
-    /**
-     * @return
-     */
-    public AuthService  {static} getInstance() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param login 
-     * @param password 
-     * @return
-     */
     public User login(String login, String password) {
-        // TODO implement here
+        for (User user : Database.getInstance().getUsers()) {
+            if (user.login(login, password)) {
+                this.currentUser = user;
+                System.out.println("Welcome, " + user.getFullName() + "!");
+                return user;
+            }
+        }
+        System.out.println("Error: Invalid email or password.");
         return null;
     }
 
-    /**
-     * @return
-     */
     public void logout() {
-        // TODO implement here
-        return null;
+        if (currentUser != null) {
+            currentUser.logout();
+            this.currentUser = null;
+        }
     }
 
-    /**
-     * @return
-     */
     public User getCurrentUser() {
-        // TODO implement here
-        return null;
+        return currentUser;
     }
 
-    /**
-     * @return
-     */
     public boolean isLoggedIn() {
-        // TODO implement here
-        return false;
+        return currentUser != null;
     }
-
 }

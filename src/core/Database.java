@@ -1,111 +1,87 @@
 package core;
 
+import academic.Course;
+import research.ResearchPaper;
+import research.ResearchProject;
+import services.Message;
+
+import java.io.*;
 import java.util.*;
 
-/**
- * 
- */
-public class Database {
+public class Database implements Serializable {
+    private static final long serialVersionUID = 6L;
+    private static final String FILE_NAME = "database.ser";
 
-    /**
-     * Default constructor
-     */
-    public Database() {
-    }
+    private static Database instance;
 
-    /**
-     * 
-     */
-    private Database  {static} instance;
-
-    /**
-     * 
-     */
     private List<User> users;
-
-    /**
-     * 
-     */
     private List<Course> courses;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> researchPapers;
-
-    /**
-     * 
-     */
     private List<ResearchProject> researchProjects;
-
-    /**
-     * 
-     */
     private List<Message> messages;
 
-    /**
-     * 
-     */
     private Database() {
-        // TODO implement here
+        this.users = new ArrayList<>();
+        this.courses = new ArrayList<>();
+        this.researchPapers = new ArrayList<>();
+        this.researchProjects = new ArrayList<>();
+        this.messages = new ArrayList<>();
     }
 
-    /**
-     * @return
-     */
-    public Database  {static} getInstance() {
-        // TODO implement here
-        return null;
+    public static Database getInstance() {
+        if (instance == null) {
+            instance = new Database();
+        }
+        return instance;
     }
 
-    /**
-     * @return
-     */
     public void save() {
-        // TODO implement here
-        return null;
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(this);
+            System.out.println("Data saved successfully.");
+        } catch (IOException e) {
+            System.err.println("Error saving database: " + e.getMessage());
+        }
     }
 
-    /**
-     * @return
-     */
     public void load() {
-        // TODO implement here
-        return null;
+        File file = new File(FILE_NAME);
+        if (file.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+                instance = (Database) ois.readObject();
+                System.out.println("Database loaded from file.");
+            } catch (Exception e) {
+                System.err.println("Error loading database, creating new one: " + e.getMessage());
+                instance = new Database();
+            }
+        } else {
+            instance = new Database();
+        }
     }
 
-    /**
-     * @return
-     */
     public List<User> getUsers() {
-        // TODO implement here
-        return null;
+        return users;
     }
 
-    /**
-     * @return
-     */
     public List<Course> getCourses() {
-        // TODO implement here
-        return null;
+        return courses;
     }
 
-    /**
-     * @param user 
-     * @return
-     */
-    public void addUser(void user) {
-        // TODO implement here
-        return null;
+    public List<ResearchPaper> getResearchPapers() {
+        return researchPapers;
+    }
+    public List<ResearchProject> getResearchProjects() {
+        return researchProjects;
     }
 
-    /**
-     * @param userId 
-     * @return
-     */
+    public void addUser(User user) {
+        if (user != null && !users.contains(user)) {
+            users.add(user);
+        }
+    }
+
     public void removeUser(String userId) {
-        // TODO implement here
-        return null;
+        users.removeIf(u -> u.getUserId().equals(userId));
     }
 
 }

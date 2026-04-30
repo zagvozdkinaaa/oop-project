@@ -1,88 +1,49 @@
 package services;
 
+import core.User;
+
+import java.io.Serializable;
 import java.util.*;
 
-/**
- * 
- */
-public class Message {
+public class Message implements Serializable {
+    private static final long serialVersionUID = 4L;
 
-    /**
-     * Default constructor
-     */
-    public Message() {
-    }
-
-    /**
-     * 
-     */
     private String messageId;
-
-    /**
-     * 
-     */
-    private void from;
-
-    /**
-     * 
-     */
-    private void to;
-
-    /**
-     * 
-     */
+    private User from;
+    private User to;
     private String text;
-
-    /**
-     * 
-     */
     private Date date;
-
-    /**
-     * 
-     */
     private boolean isRead;
 
+    public Message(User from, User to, String text) {
+        this.messageId = UUID.randomUUID().toString();
+        this.from = from;
+        this.to = to;
+        this.text = text;
+        this.date = new Date();
+        this.isRead = false;
+    }
 
-
-    /**
-     * @return
-     */
     public String getText() {
-        // TODO implement here
-        return "";
+        return text;
     }
 
-    /**
-     * @return
-     */
-    public void getSender() {
-        // TODO implement here
-        return null;
+    public User getSender() {
+        return from;
     }
 
-    /**
-     * @return
-     */
-    public void getReceiver() {
-        // TODO implement here
-        return null;
+    public User getReceiver() {
+        return to;
     }
 
-    /**
-     * @return
-     */
     public void markAsRead() {
-        // TODO implement here
-        return null;
+        this.isRead = true;
     }
 
-    /**
-     * @return
-     */
+    @Override
     public String toString() {
-        // TODO implement here
-        return "";
+        String status = isRead ? "[Read]" : "[New]";
+        return String.format("%s From: %s | Date: %s\nText: %s",
+                status, from.getFullName(), date, text);
     }
-
 }
