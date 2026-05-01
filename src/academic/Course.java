@@ -2,6 +2,7 @@ package academic;
 
 import users.Student;
 import users.Teacher;
+import exceptions.*;
 
 import java.util.*;
 
@@ -12,12 +13,13 @@ public class Course {
     private String code;
     private int credits;
 
+    private int maxStudents = 30; // бонус
+
     private List<Teacher> teachers;
     private List<Student> enrolledStudents;
     private List<Lesson> lessons;
 
     private boolean isOpenForRegistration;
-
 
     public Course(String courseId, String name, String code, int credits) {
         this.courseId = courseId;
@@ -31,7 +33,6 @@ public class Course {
         this.isOpenForRegistration = true;
     }
 
-  
     public String getCourseId() {
         return courseId;
     }
@@ -56,18 +57,26 @@ public class Course {
         return credits;
     }
 
- 
-    public void addStudent(Student student) {
+    // регис
+    public void addStudent(Student student)
+            throws CourseRegistrationClosedException,
+            AlreadyEnrolledException,
+            MaxStudentsExceededException {
+
         if (!isOpenForRegistration) {
-            System.out.println("Registration is closed for this course.");
-            return;
+            throw new CourseRegistrationClosedException(name);
         }
 
-        if (!enrolledStudents.contains(student)) {
-            enrolledStudents.add(student);
+        if (enrolledStudents.contains(student)) {
+            throw new AlreadyEnrolledException(student);
         }
+
+        if (enrolledStudents.size() >= maxStudents) {
+            throw new MaxStudentsExceededException(maxStudents);
+        }
+
+        enrolledStudents.add(student);
     }
-
 
     public void addTeacher(Teacher teacher) {
         if (!teachers.contains(teacher)) {
@@ -75,22 +84,30 @@ public class Course {
         }
     }
 
-  
     public void addLesson(Lesson lesson) {
+        for (Lesson l : lessons) {
+            if (l.getDate().equals(lesson.getDate()) &&
+                    l.getRoom().equals(lesson.getRoom())) {
+
+                System.out.println("Schedule conflict detected");
+                return;
+            }
+        }
         lessons.add(lesson);
     }
 
-  
     public boolean isOpenForRegistration() {
         return isOpenForRegistration;
     }
 
-   
     public void setOpenForRegistration(boolean open) {
         this.isOpenForRegistration = open;
     }
 
-  
+    public int getStudentCount() {
+        return enrolledStudents.size();
+    }
+
     @Override
     public String toString() {
         return "Course: " + name +
