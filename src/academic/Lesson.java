@@ -1,108 +1,73 @@
 package academic;
 
 import enums.LessonType;
+import users.Teacher;
 
-import java.util.*;
+import java.util.Date;
 
-/**
- * 
- */
 public class Lesson {
 
-    /**
-     * Default constructor
-     */
-    public Lesson() {
-    }
-
-    /**
-     * 
-     */
     private String lessonId;
-
-    /**
-     * 
-     */
     private Course course;
-
-    /**
-     * 
-     */
     private LessonType type;
-
-    /**
-     * 
-     */
     private Date date;
-
-    /**
-     * 
-     */
     private String room;
-
-    /**
-     * 
-     */
     private Teacher teacher;
+    private int duration; 
 
-    /**
-     * 
-     */
-    private int duration;
+   
+    public Lesson(String lessonId, Course course, LessonType type,
+                  Date date, String room, Teacher teacher, int duration) {
+        this.lessonId = lessonId;
+        this.course = course;
+        this.type = type;
+        this.date = date;
+        this.room = room;
+        this.teacher = teacher;
+        this.duration = duration;
+    }
 
-    /**
-     * 
-     */
-    public void Attribute1;
-
-
-
-    /**
-     * @return
-     */
     public String getLessonId() {
-        // TODO implement here
-        return "";
+        return lessonId;
     }
 
-    /**
-     * @return
-     */
     public LessonType getType() {
-        // TODO implement here
-        return null;
+        return type;
     }
 
-    /**
-     * @return
-     */
     public Date getDate() {
-        // TODO implement here
-        return null;
+        return date;
     }
 
-    /**
-     * @return
-     */
     public String getRoom() {
-        // TODO implement here
-        return "";
+        return room;
     }
 
-    /**
-     * @return
-     */
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+   
+    public boolean isLecture() {
+        return type == LessonType.LECTURE;
+    }
+
+  
+    @Override
     public String toString() {
-        // TODO implement here
-        return "";
+        return "Lesson: " + type +
+                ", course=" + (course != null ? course.getName() : "N/A") +
+                ", teacher=" + (teacher != null ? teacher.getName() : "N/A") +
+                ", room=" + room +
+                ", date=" + date +
+                ", duration=" + duration + " min";
     }
-
-    /**
-     * @return
-     */
-    public String toString() {
-        // TODO implement here
-        return "";
-    }
-
 }
