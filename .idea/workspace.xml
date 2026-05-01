@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b05becb3-1457-4dcb-aa8f-5cd443b14794" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/oop-project/src/exceptions/LowHIndexException.java" beforeDir="false" afterPath="$PROJECT_DIR$/oop-project/src/exceptions/LowHIndexException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oop-project/src/research/ResearchPaper.java" beforeDir="false" afterPath="$PROJECT_DIR$/oop-project/src/research/ResearchPaper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oop-project/src/users/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/oop-project/src/users/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/oop-project/src/users/Teacher.java" beforeDir="false" afterPath="$PROJECT_DIR$/oop-project/src/users/Teacher.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/oop-project" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="3D7yQ8jRPkSDOgeFjVXNHRlX2Id" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/miraszhumatayev/Desktop/oop/proj",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.240" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b05becb3-1457-4dcb-aa8f-5cd443b14794" name="Changes" comment="" />
+      <created>1777647383259</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777647383259</updated>
+      <workItem from="1777647384280" duration="199000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
