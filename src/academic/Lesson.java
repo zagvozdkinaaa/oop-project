@@ -1,9 +1,10 @@
 package academic;
 
 import enums.LessonType;
+import users.Student;
 import users.Teacher;
 
-import java.util.Date;
+import java.util.*;
 
 public class Lesson {
 
@@ -13,9 +14,11 @@ public class Lesson {
     private Date date;
     private String room;
     private Teacher teacher;
-    private int duration; 
+    private int duration;
 
-   
+    // attendance
+    private Map<Student, Boolean> attendance = new HashMap<>();
+
     public Lesson(String lessonId, Course course, LessonType type,
                   Date date, String room, Teacher teacher, int duration) {
         this.lessonId = lessonId;
@@ -55,12 +58,21 @@ public class Lesson {
         return course;
     }
 
-   
     public boolean isLecture() {
         return type == LessonType.LECTURE;
     }
 
-  
+    // attendance
+    public void markAttendance(Student student, boolean present) {
+        attendance.put(student, present);
+    }
+
+    public long getAbsences(Student student) {
+        return attendance.entrySet().stream()
+                .filter(e -> e.getKey().equals(student) && !e.getValue())
+                .count();
+    }
+
     @Override
     public String toString() {
         return "Lesson: " + type +
