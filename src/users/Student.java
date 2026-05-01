@@ -2,6 +2,11 @@ package users;
 
 import core.User;
 import research.Researcher;
+import research.ResearchPaper;
+import research.ResearchProject;
+import academic.Course;
+import academic.Mark;
+import academic.Transcript;
 
 import java.util.*;
 
@@ -79,20 +84,14 @@ public class Student extends User implements Researcher, Comparable<Student> {
 
 
 
-
-
-
-
-
-
-
     /**
      * @param course 
      * @return
      */
     public void registerCourse(Course course) {
-        // TODO implement here
-        return null;
+        if (this.courses == null) this.courses = new ArrayList<>();
+        this.courses.add(course);
+        course.addStudent(this);
     }
 
     /**
@@ -100,24 +99,26 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public void dropCourse(Course course) {
-        // TODO implement here
-        return null;
+        if (this.courses != null) {
+            this.courses.remove(course);
+        }
     }
 
     /**
      * @return
      */
     public List<Course> viewCourses() {
-        // TODO implement here
-        return null;
+        return this.courses;
     }
 
     /**
      * @param Course c 
      * @return
      */
-    public List<Student> viewStudents(void Course c) {
-        // TODO implement here
+    public List<Student> viewStudents(Course c) {
+        if (c != null) {
+            return c.getEnrolledStudents();
+        }
         return null;
     }
 
@@ -125,8 +126,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public List<Mark> viewMarks() {
-        // TODO implement here
-        return null;
+        return this.marks;
     }
 
     /**
@@ -135,32 +135,30 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public void rateTeacher(Teacher teacher, double rating) {
-        // TODO implement here
-        return null;
+        if (teacher != null) {
+            teacher.addRating(rating);
+        }
     }
 
     /**
      * @return
      */
     public Transcript viewTranscript() {
-        // TODO implement here
-        return null;
+        return this.transcript;
     }
 
     /**
      * @return
      */
     public double getGpa() {
-        // TODO implement here
-        return 0.0d;
+        return this.gpa;
     }
 
     /**
      * @return
      */
     public int getCredits() {
-        // TODO implement here
-        return 0;
+        return this.credits;
     }
 
     /**
@@ -168,16 +166,14 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public void setSupervisor(Teacher teacher) {
-        // TODO implement here
-        return null;
+        this.supervisor = (Researcher) teacher;
     }
 
     /**
      * @return
      */
     public Teacher getSupervisor() {
-        // TODO implement here
-        return null;
+        return (Teacher) this.supervisor;
     }
 
     /**
@@ -185,16 +181,14 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public int compareTo(Student other) {
-        // TODO implement here
-        return 0;
+        return Double.compare(this.gpa, other.gpa);
     }
 
     /**
      * @return
      */
     public String toString() {
-        // TODO implement here
-        return "";
+        return "Student: " + getFullName();
     }
 
     /**
@@ -209,16 +203,14 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public List<ResearchPaper> getResearchPapers() {
-        // TODO implement research.Researcher.getResearchPapers() here
-        return null;
+        return this.researchPapers;
     }
 
     /**
      * @return
      */
     public List<ResearchProject> getResearchProjects() {
-        // TODO implement research.Researcher.getResearchProjects() here
-        return null;
+        return this.researchProjects;
     }
 
     /**
@@ -226,8 +218,12 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public void printPapers(Comparator<ResearchPaper> c) {
-        // TODO implement research.Researcher.printPapers() here
-        return null;
+        if (this.researchPapers != null) {
+            this.researchPapers.sort(c);
+            for (ResearchPaper p : this.researchPapers) {
+                System.out.println(p);
+            }
+        }
     }
 
     /**
@@ -235,8 +231,8 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public void addResearchPaper(ResearchPaper paper) {
-        // TODO implement research.Researcher.addResearchPaper() here
-        return null;
+        if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
+        this.researchPapers.add(paper);
     }
 
     /**
@@ -244,8 +240,8 @@ public class Student extends User implements Researcher, Comparable<Student> {
      * @return
      */
     public void addResearchProject(ResearchProject project) {
-        // TODO implement research.Researcher.addResearchProject() here
-        return null;
+        if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
+        this.researchProjects.add(project);
     }
 
 }

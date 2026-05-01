@@ -21,11 +21,6 @@ public class Admin extends Employee {
     private List<String> logs;
 
     /**
-     * 
-     */
-    private List<String> logs;
-
-    /**
      * @param user 
      * @return
      */
@@ -49,7 +44,6 @@ public class Admin extends Employee {
      */
     public void updateUser(User user) {
         // TODO implement here
-        return null;
     }
 
     /**
@@ -63,9 +57,9 @@ public class Admin extends Employee {
     /**
      * @return
      */
-    public List<Log> viewLogs() {
+    public List<String> viewLogs() {
         // TODO implement here
-        return null;
+        return logs;
     }
 
 }

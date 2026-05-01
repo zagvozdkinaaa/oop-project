@@ -2,6 +2,10 @@ package users;
 
 import enums.TeacherPosition;
 import research.Researcher;
+import research.ResearchPaper;
+import research.ResearchProject;
+import academic.Course;
+import academic.Mark;
 
 import java.util.*;
 
@@ -59,37 +63,32 @@ public class Teacher extends Employee implements Researcher {
 
 
 
-
     /**
      * @return
      */
     public TeacherPosition getPosition() {
-        // TODO implement here
-        return null;
+        return this.position;
     }
 
     /**
      * @return
      */
     public List<Course> getCourses() {
-        // TODO implement here
-        return null;
+        return this.courses;
     }
 
     /**
      * @return
      */
     public double getRating() {
-        // TODO implement here
-        return 0.0d;
+        return this.rating;
     }
 
     /**
      * @return
      */
     public int getHIndex() {
-        // TODO implement here
-        return 0;
+        return this.hIndex;
     }
 
     /**
@@ -99,8 +98,9 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public void putMark(Student student, Course course, Mark mark) {
-        // TODO implement here
-        return null;
+        if (student != null && student.viewTranscript() != null) {
+            student.viewTranscript().addMark(mark);
+        }
     }
 
     /**
@@ -108,17 +108,8 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public void addCourse(Course course) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param course 
-     * @return
-     */
-    public void addCourse(Course course) {
-        // TODO implement here
-        return null;
+        if (this.courses == null) this.courses = new ArrayList<>();
+        this.courses.add(course);
     }
 
     /**
@@ -126,7 +117,9 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public List<Student> viewStudents(Course course) {
-        // TODO implement here
+        if (course != null) {
+            return course.getEnrolledStudents();
+        }
         return null;
     }
 
@@ -135,27 +128,14 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public String generateMarkReport(Course course) {
-        // TODO implement here
-        return "";
+        return "Mark report for " + (course != null ? course.getName() : "unknown");
     }
 
     /**
      * @return
      */
     public boolean isResearcher() {
-        // TODO implement here
-        return false;
-    }
-
-    /**
-     * @param student 
-     * @param course 
-     * @param mark 
-     * @return
-     */
-    public void putMark(Student student, Course course, Mark mark) {
-        // TODO implement here
-        return null;
+        return this.isResearcher;
     }
 
     /**
@@ -163,58 +143,33 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public void printPapers(Comparator<ResearchPaper> c) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param course 
-     * @return
-     */
-    public String generateMarkReport(Course course) {
-        // TODO implement here
-        return "";
+        if (this.researchPapers != null) {
+            this.researchPapers.sort(c);
+            for (ResearchPaper p : this.researchPapers) {
+                System.out.println(p);
+            }
+        }
     }
 
     /**
      * @return
      */
     public String toString() {
-        // TODO implement here
-        return "";
-    }
-
-    /**
-     * @return
-     */
-    public int getHIndex() {
-        // TODO implement research.Researcher.getHIndex() here
-        return 0;
+        return "Teacher: " + getFullName();
     }
 
     /**
      * @return
      */
     public List<ResearchPaper> getResearchPapers() {
-        // TODO implement research.Researcher.getResearchPapers() here
-        return null;
+        return this.researchPapers;
     }
 
     /**
      * @return
      */
     public List<ResearchProject> getResearchProjects() {
-        // TODO implement research.Researcher.getResearchProjects() here
-        return null;
-    }
-
-    /**
-     * @param c 
-     * @return
-     */
-    public void printPapers(Comparator<ResearchPaper> c) {
-        // TODO implement research.Researcher.printPapers() here
-        return null;
+        return this.researchProjects;
     }
 
     /**
@@ -222,8 +177,8 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public void addResearchPaper(ResearchPaper paper) {
-        // TODO implement research.Researcher.addResearchPaper() here
-        return null;
+        if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
+        this.researchPapers.add(paper);
     }
 
     /**
@@ -231,8 +186,13 @@ public class Teacher extends Employee implements Researcher {
      * @return
      */
     public void addResearchProject(ResearchProject project) {
-        // TODO implement research.Researcher.addResearchProject() here
-        return null;
+        if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
+        this.researchProjects.add(project);
+    }
+
+    public void addRating(double r) {
+        // Simple rating update
+        this.rating = (this.rating + r) / 2;
     }
 
 }

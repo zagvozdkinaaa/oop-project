@@ -15,15 +15,16 @@ public class CreditLimitExceededException {
      * @param credits
      */
     public CreditLimitExceededException(int credits) {
-        // TODO implement here
+        this.credits = credits;
     }
+
+    private int credits;
 
     /**
      * @return
      */
     public String getMessage() {
-        // TODO implement here
-        return "";
+        return "Credit limit exceeded: " + credits;
     }
 
 }

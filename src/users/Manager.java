@@ -1,6 +1,9 @@
 package users;
 
 import enums.ManagerType;
+import enums.StudentYear;
+import academic.Course;
+import services.Request;
 
 import java.util.*;
 
@@ -37,8 +40,9 @@ public class Manager extends Employee {
      * @return
      */
     public void approveRegistration(Student student, Course course) {
-        // TODO implement here
-        return null;
+        if (course != null) {
+            course.addStudent(student);
+        }
     }
 
     /**
@@ -46,25 +50,25 @@ public class Manager extends Employee {
      * @param Teacher t 
      * @return
      */
-    public void assignTeacher(void Course c, void Teacher t) {
-        // TODO implement here
-        return null;
+    public void assignTeacher(Course c, Teacher t) {
+        if (c != null && t != null) {
+            c.addTeacher(t);
+            t.addCourse(c);
+        }
     }
 
     /**
      * @return
      */
     public String createReport() {
-        // TODO implement here
-        return "";
+        return "Manager report";
     }
 
     /**
      * @return
      */
     public void manageNews() {
-        // TODO implement here
-        return null;
+        // Logic
     }
 
     /**
@@ -74,8 +78,9 @@ public class Manager extends Employee {
      * @return
      */
     public void addCourseForRegistration(Course course, String major, StudentYear year) {
-        // TODO implement here
-        return null;
+        if (course != null) {
+            course.setOpenForRegistration(true);
+        }
     }
 
     /**
@@ -84,8 +89,9 @@ public class Manager extends Employee {
      * @return
      */
     public void assignTeacherToCourse(Teacher teacher, Course course) {
-        // TODO implement here
-        return null;
+        if (course != null) {
+            course.addTeacher(teacher);
+        }
     }
 
     /**
@@ -93,8 +99,8 @@ public class Manager extends Employee {
      * @return
      */
     public void addNews(String news) {
-        // TODO implement here
-        return null;
+        if (this.news == null) this.news = new ArrayList<>();
+        this.news.add(news);
     }
 
     /**
@@ -102,7 +108,6 @@ public class Manager extends Employee {
      * @return
      */
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
-        // TODO implement here
         return null;
     }
 
@@ -110,7 +115,6 @@ public class Manager extends Employee {
      * @return
      */
     public List<Teacher> viewAllTeachers() {
-        // TODO implement here
         return null;
     }
 
@@ -118,7 +122,6 @@ public class Manager extends Employee {
      * @return
      */
     public List<Request> viewRequests() {
-        // TODO implement here
         return null;
     }
 
@@ -127,8 +130,9 @@ public class Manager extends Employee {
      * @return
      */
     public void approveRequest(Request request) {
-        // TODO implement here
-        return null;
+        if (request != null) {
+            request.setStatus(enums.RequestStatus.APPROVED);
+        }
     }
 
 }
