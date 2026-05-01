@@ -2,107 +2,43 @@ package research;
 
 import java.util.*;
 
-/**
- * 
- */
 public class ResearchProject {
 
-    /**
-     * Default constructor
-     */
-    public ResearchProject() {
-    }
-
-    /**
-     * 
-     */
     private String projectId;
-
-    /**
-     * 
-     */
     private String topic;
-
-    /**
-     * 
-     */
     private List<Researcher> participants;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> publishedPapers;
-
-    /**
-     * 
-     */
-    private publishedPapers: List~ResearchPaper~;
-
-    /**
-     * 
-     */
     private Date startDate;
-
-    /**
-     * 
-     */
     private String status;
 
+    public ResearchProject(String topic) {
+        this.topic = topic;
+        this.participants = new ArrayList<>();
+        this.publishedPapers = new ArrayList<>();
+    }
 
-
-
-
-
-
-
-    /**
-     * @return
-     */
     public String getTopic() {
-        // TODO implement here
-        return "";
+        return topic;
     }
 
-    /**
-     * @return
-     */
     public List<Researcher> getParticipants() {
-        // TODO implement here
-        return null;
+        return participants;
     }
 
-    /**
-     * @param r 
-     * @return
-     */
     public void addParticipant(Researcher r) {
-        // TODO implement here
-        return null;
+        participants.add(r);
     }
 
-    /**
-     * @param paper 
-     * @return
-     */
     public void addPaper(ResearchPaper paper) {
-        // TODO implement here
-        return null;
+        publishedPapers.add(paper);
     }
 
-    /**
-     * @return
-     */
     public List<ResearchPaper> getPublishedPapers() {
-        // TODO implement here
-        return null;
+        return publishedPapers;
     }
 
-    /**
-     * @return
-     */
+    @Override
     public String toString() {
-        // TODO implement here
-        return "";
+        return "Project: " + topic + ", Papers: " + publishedPapers.size();
     }
-
 }
