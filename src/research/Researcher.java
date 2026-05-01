@@ -2,46 +2,17 @@ package research;
 
 import java.util.*;
 
-/**
- * 
- */
 public interface Researcher {
 
+    int getHIndex();
 
+    List<ResearchPaper> getResearchPapers();
 
+    List<ResearchProject> getResearchProjects();
 
+    void printPapers(Comparator<ResearchPaper> c);
 
-    /**
-     * @return
-     */
-    public int getHIndex();
+    void addResearchPaper(ResearchPaper paper);
 
-    /**
-     * @return
-     */
-    public List<ResearchPaper> getResearchPapers();
-
-    /**
-     * @return
-     */
-    public List<ResearchProject> getResearchProjects();
-
-    /**
-     * @param c 
-     * @return
-     */
-    public void printPapers(Comparator<ResearchPaper> c);
-
-    /**
-     * @param paper 
-     * @return
-     */
-    public void addResearchPaper(ResearchPaper paper);
-
-    /**
-     * @param project 
-     * @return
-     */
-    public void addResearchProject(ResearchProject project);
-
+    void addResearchProject(ResearchProject project);
 }
