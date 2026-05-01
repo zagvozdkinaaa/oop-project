@@ -1,6 +1,7 @@
 package academic;
 
 import users.Student;
+import exceptions.InvalidMarkException;
 
 public class Mark {
 
@@ -14,9 +15,14 @@ public class Mark {
 
     private double total;
 
-   
     public Mark(String markId, Student student, Course course,
-                double firstAttestation, double secondAttestation, double finalExam) {
+                double firstAttestation, double secondAttestation, double finalExam)
+            throws InvalidMarkException {
+
+        validate(firstAttestation);
+        validate(secondAttestation);
+        validate(finalExam);
+
         this.markId = markId;
         this.student = student;
         this.course = course;
@@ -27,10 +33,15 @@ public class Mark {
         this.total = calculateTotal();
     }
 
-   
+    //  bonus
+    private void validate(double value) throws InvalidMarkException {
+        if (value < 0 || value > 100) {
+            throw new InvalidMarkException(value);
+        }
+    }
 
     public double calculateTotal() {
-        this.total = firstAttestation + secondAttestation + finalExam;
+        total = firstAttestation + secondAttestation + finalExam;
         return total;
     }
 
@@ -43,23 +54,21 @@ public class Mark {
     }
 
     public String getLetterGrade() {
-    if (total > 100) total = 100;
-    if (total < 0) total = 0;
+        double t = Math.max(0, Math.min(100, total));
 
-    if (total >= 95) return "A";
-    else if (total >= 90) return "A-";
-    else if (total >= 85) return "B+";
-    else if (total >= 80) return "B";
-    else if (total >= 75) return "B-";
-    else if (total >= 70) return "C+";
-    else if (total >= 65) return "C";
-    else if (total >= 60) return "C-";
-    else if (total >= 55) return "D+";
-    else if (total >= 50) return "D";
-    else return "F";
-}
+        if (t >= 95) return "A";
+        else if (t >= 90) return "A-";
+        else if (t >= 85) return "B+";
+        else if (t >= 80) return "B";
+        else if (t >= 75) return "B-";
+        else if (t >= 70) return "C+";
+        else if (t >= 65) return "C";
+        else if (t >= 60) return "C-";
+        else if (t >= 55) return "D+";
+        else if (t >= 50) return "D";
+        else return "F";
+    }
 
-  
     @Override
     public String toString() {
         return "Course: " + (course != null ? course.getName() : "N/A") +
