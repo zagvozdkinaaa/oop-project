@@ -18,13 +18,16 @@ public class Transcript {
         this.generatedDate = new Date();
     }
 
-   
     public void addMark(Mark mark) {
         marks.add(mark);
+        calculateGpa();
     }
 
     public double calculateGpa() {
-        if (marks.isEmpty()) return 0.0;
+        if (marks.isEmpty()) {
+            this.gpa = 0.0;
+            return gpa;
+        }
 
         double sum = 0;
         for (Mark m : marks) {
@@ -36,7 +39,7 @@ public class Transcript {
     }
 
     public double getGpa() {
-        return gpa;
+        return calculateGpa();
     }
 
     public void generate(Student student) {
@@ -49,10 +52,13 @@ public class Transcript {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
+        String formattedDate = new java.text.SimpleDateFormat("dd-MM-yyyy")
+                .format(generatedDate);
+
         sb.append("Transcript for: ")
           .append(student != null ? student.getName() : "N/A")
-          .append("\nDate: ").append(generatedDate)
-          .append("\nGPA: ").append(gpa)
+          .append("\nDate: ").append(formattedDate)
+          .append("\nGPA: ").append(String.format("%.2f", gpa))
           .append("\nMarks:\n");
 
         for (Mark m : marks) {
