@@ -33,7 +33,7 @@ public class Teacher extends Employee implements Researcher {
 
     public void putMark(Student student, Course course, Mark mark) {
         student.viewMarks().add(mark);
-        System.out.println("Mark " + mark.getValue() + " assigned to " + student.getFullName());
+        System.out.println("Mark " + mark.getTotal() + " assigned to " + student.getFullName());
     }
 
     public void addCourse(Course course) {

@@ -36,9 +36,6 @@ public class Student extends User implements Researcher, Comparable<Student> {
         this.isResearcher = false;
         this.gpa = 0.0;
     }
-
-    // --- Academic Methods ---
-
     public void registerCourse(Course course) {
         if (!courses.contains(course)) {
             courses.add(course);
@@ -68,7 +65,6 @@ public class Student extends User implements Researcher, Comparable<Student> {
     public int getCredits() {
         return credits;
     }
-
 
     public void setSupervisor(Researcher supervisor) {
         this.supervisor = supervisor;

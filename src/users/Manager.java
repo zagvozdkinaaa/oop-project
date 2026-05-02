@@ -25,21 +25,17 @@ public class Manager extends Employee {
     }
 
     public void approveRegistration(Student student, Course course) {
-        student.getCourses().add(course);
+        student.viewCourses().add(course);
         System.out.println("Registration approved for " + student.getFullName() + " for " + course.getName());
     }
 
-    /**
-     * Assigns a teacher to a specific course.
-     */
     public void assignTeacherToCourse(Teacher teacher, Course course) {
-        course.setInstructor(teacher);
+        course.addTeacher(teacher);
         System.out.println("Teacher " + teacher.getFullName() + " assigned to " + course.getName());
     }
 
     public void addNews(String newsContent) {
         this.news.add(newsContent);
-        // Можно также добавить новость в глобальный список Database, если он там есть
     }
 
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
