@@ -15,82 +15,45 @@ import java.util.*;
  */
 public class Student extends User implements Researcher, Comparable<Student> {
 
-    /**
-     * Default constructor
-     */
-    public Student() {
-    }
-
-    /**
-     * 
-     */
     private double gpa;
-
-    /**
-     * 
-     */
     private int year;
-
-    /**
-     * 
-     */
     private String major;
-
-    /**
-     * 
-     */
     private int credits;
-
-    /**
-     * 
-     */
     private List<Course> courses;
-
-    /**
-     * 
-     */
     private List<Mark> marks;
-
-    /**
-     * 
-     */
     private Transcript transcript;
-
-    /**
-     * 
-     */
     private Researcher supervisor;
-
-    /**
-     * 
-     */
     private int failCount;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> researchPapers;
-
-    /**
-     * 
-     */
     private List<ResearchProject> researchProjects;
-
-    /**
-     * 
-     */
     private boolean isResearcher;
 
+    public Student(String id, String firstName, String lastName, String email, String password, String major, int year) {
+        super(id, firstName, lastName, email, password, enums.UserRole.STUDENT);
+        this.major = major;
+        this.year = year;
+        this.gpa = 0.0;
+        this.credits = 0;
+        this.courses = new ArrayList<>();
+        this.marks = new ArrayList<>();
+        this.transcript = new academic.Transcript();
+        this.researchPapers = new ArrayList<>();
+        this.researchProjects = new ArrayList<>();
+        this.isResearcher = false;
+        this.failCount = 0;
+    }
 
+    public void registerCourse(Course course) throws exceptions.CreditLimitExceededException {
+        if (course == null) return;
+        
+        int totalCredits = this.credits + course.getCredits();
+        if (totalCredits > 21) {
+            throw new exceptions.CreditLimitExceededException(totalCredits);
+        }
 
-
-    /**
-     * @param course 
-     * @return
-     */
-    public void registerCourse(Course course) {
         if (this.courses == null) this.courses = new ArrayList<>();
         this.courses.add(course);
+        this.credits = totalCredits;
         course.addStudent(this);
     }
 

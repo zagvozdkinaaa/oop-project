@@ -14,51 +14,24 @@ import java.util.*;
  */
 public class Teacher extends Employee implements Researcher {
 
-    /**
-     * Default constructor
-     */
-    public Teacher() {
-    }
-
-    /**
-     * 
-     */
     private TeacherPosition position;
-
-    /**
-     * 
-     */
     private List<Course> courses;
-
-    /**
-     * 
-     */
     private double rating;
-
-    /**
-     * 
-     */
     private int hIndex;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> researchPapers;
-
-    /**
-     * 
-     */
     private List<ResearchProject> researchProjects;
-
-    /**
-     * 
-     */
     private boolean isResearcher;
 
-    /**
-     * 
-     */
-    public void Attribute1;
+    public Teacher(String id, String firstName, String lastName, String email, String password, double salary, TeacherPosition position) {
+        super(id, firstName, lastName, email, password, enums.UserRole.TEACHER, salary);
+        this.position = position;
+        this.rating = 0.0;
+        this.hIndex = 0;
+        this.courses = new ArrayList<>();
+        this.researchPapers = new ArrayList<>();
+        this.researchProjects = new ArrayList<>();
+        this.isResearcher = false;
+    }
 
 
 

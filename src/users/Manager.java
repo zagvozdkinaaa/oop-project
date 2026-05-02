@@ -33,23 +33,19 @@ public class Manager extends Employee {
      */
     private List<Course> managedCourses;
 
+    public Manager(String id, String firstName, String lastName, String email, String password, double salary, ManagerType type) {
+        super(id, firstName, lastName, email, password, enums.UserRole.MANAGER, salary);
+        this.type = type;
+        this.news = new ArrayList<>();
+        this.managedCourses = new ArrayList<>();
+    }
 
-    /**
-     * @param student 
-     * @param course 
-     * @return
-     */
     public void approveRegistration(Student student, Course course) {
-        if (course != null) {
+        if (course != null && course.isOpenForRegistration()) {
             course.addStudent(student);
         }
     }
 
-    /**
-     * @param Course c 
-     * @param Teacher t 
-     * @return
-     */
     public void assignTeacher(Course c, Teacher t) {
         if (c != null && t != null) {
             c.addTeacher(t);
@@ -57,78 +53,58 @@ public class Manager extends Employee {
         }
     }
 
-    /**
-     * @return
-     */
     public String createReport() {
-        return "Manager report";
+        return "Manager " + getFullName() + " report - " + new Date();
     }
 
-    /**
-     * @return
-     */
     public void manageNews() {
-        // Logic
+        System.out.println("Current news count: " + (news != null ? news.size() : 0));
     }
 
-    /**
-     * @param course 
-     * @param major 
-     * @param year 
-     * @return
-     */
     public void addCourseForRegistration(Course course, String major, StudentYear year) {
         if (course != null) {
             course.setOpenForRegistration(true);
         }
     }
 
-    /**
-     * @param teacher 
-     * @param course 
-     * @return
-     */
     public void assignTeacherToCourse(Teacher teacher, Course course) {
         if (course != null) {
             course.addTeacher(teacher);
         }
     }
 
-    /**
-     * @param news 
-     * @return
-     */
     public void addNews(String news) {
         if (this.news == null) this.news = new ArrayList<>();
         this.news.add(news);
     }
 
-    /**
-     * @param comparator 
-     * @return
-     */
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
-        return null;
+        List<Student> students = new ArrayList<>();
+        for (core.User u : core.Database.getInstance().getUsers()) {
+            if (u instanceof Student) {
+                students.add((Student) u);
+            }
+        }
+        if (comparator != null) {
+            students.sort(comparator);
+        }
+        return students;
     }
 
-    /**
-     * @return
-     */
     public List<Teacher> viewAllTeachers() {
-        return null;
+        List<Teacher> teachers = new ArrayList<>();
+        for (core.User u : core.Database.getInstance().getUsers()) {
+            if (u instanceof Teacher) {
+                teachers.add((Teacher) u);
+            }
+        }
+        return teachers;
     }
 
-    /**
-     * @return
-     */
     public List<Request> viewRequests() {
-        return null;
+        return new ArrayList<>(); // Request storage in Database
     }
 
-    /**
-     * @param request 
-     * @return
-     */
     public void approveRequest(Request request) {
         if (request != null) {
             request.setStatus(enums.RequestStatus.APPROVED);

@@ -20,45 +20,37 @@ public class Admin extends Employee {
      */
     private List<String> logs;
 
-    /**
-     * @param user 
-     * @return
-     */
+    public Admin(String id, String firstName, String lastName, String email, String password, double salary) {
+        super(id, firstName, lastName, email, password, enums.UserRole.ADMIN, salary);
+        this.logs = new ArrayList<>();
+    }
+
     public void addUser(User user) {
-        // TODO implement here
-        return null;
+        core.Database.getInstance().addUser(user);
+        logs.add("Added user: " + user.getUserId());
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void removeUser(User user) {
-        // TODO implement here
-        return null;
+        core.Database.getInstance().removeUser(user.getUserId());
+        logs.add("Removed user: " + user.getUserId());
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void updateUser(User user) {
-        // TODO implement here
+        List<User> users = core.Database.getInstance().getUsers();
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUserId().equals(user.getUserId())) {
+                users.set(i, user);
+                logs.add("Updated user: " + user.getUserId());
+                return;
+            }
+        }
     }
 
-    /**
-     * @return
-     */
     public List<User> getAllUsers() {
-        // TODO implement here
-        return null;
+        return core.Database.getInstance().getUsers();
     }
 
-    /**
-     * @return
-     */
     public List<String> viewLogs() {
-        // TODO implement here
         return logs;
     }
 

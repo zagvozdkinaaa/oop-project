@@ -3,28 +3,17 @@ package exceptions;
 /**
  * 
  */
-public class CreditLimitExceededException {
-
-    /**
-     * Default constructor
-     */
-    public CreditLimitExceededException() {
-    }
-
-    /**
-     * @param credits
-     */
-    public CreditLimitExceededException(int credits) {
-        this.credits = credits;
-    }
+public class CreditLimitExceededException extends Exception {
 
     private int credits;
 
-    /**
-     * @return
-     */
-    public String getMessage() {
-        return "Credit limit exceeded: " + credits;
+    public CreditLimitExceededException(int credits) {
+        super("Credit limit exceeded: " + credits);
+        this.credits = credits;
+    }
+
+    public int getCredits() {
+        return credits;
     }
 
 }
