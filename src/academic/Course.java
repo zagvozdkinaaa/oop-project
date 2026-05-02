@@ -1,164 +1,117 @@
 package academic;
 
 import users.Student;
+import users.Teacher;
+import exceptions.*;
 
 import java.util.*;
 
-/**
- * 
- */
 public class Course {
 
-    /**
-     * Default constructor
-     */
-    public Course() {
-    }
-
-    /**
-     * 
-     */
     private String courseId;
-
-    /**
-     * 
-     */
     private String name;
-
-    /**
-     * 
-     */
     private String code;
-
-    /**
-     * 
-     */
     private int credits;
 
-    /**
-     * 
-     */
+    private int maxStudents = 30; // бонус
+
     private List<Teacher> teachers;
-
-    /**
-     * 
-     */
     private List<Student> enrolledStudents;
-
-    /**
-     * 
-     */
     private List<Lesson> lessons;
 
-    /**
-     * 
-     */
     private boolean isOpenForRegistration;
 
-    /**
-     * 
-     */
-    public void Attribute1;
+    public Course(String courseId, String name, String code, int credits) {
+        this.courseId = courseId;
+        this.name = name;
+        this.code = code;
+        this.credits = credits;
 
+        this.teachers = new ArrayList<>();
+        this.enrolledStudents = new ArrayList<>();
+        this.lessons = new ArrayList<>();
+        this.isOpenForRegistration = true;
+    }
 
-
-
-
-
-
-
-
-
-    /**
-     * @return
-     */
     public String getCourseId() {
-        // TODO implement here
-        return "";
+        return courseId;
     }
 
-    /**
-     * @return
-     */
     public List<Lesson> getLessons() {
-        // TODO implement here
-        return null;
+        return lessons;
     }
 
-    /**
-     * @return
-     */
     public String getName() {
-        // TODO implement here
-        return "";
+        return name;
     }
 
-    /**
-     * @return
-     */
     public List<Teacher> getTeachers() {
-        // TODO implement here
-        return null;
+        return teachers;
     }
 
-    /**
-     * @return
-     */
     public List<Student> getEnrolledStudents() {
-        // TODO implement here
-        return null;
+        return enrolledStudents;
     }
 
-    /**
-     * @param student 
-     * @return
-     */
-    public void addStudent(Student student) {
-        // TODO implement here
-        return null;
+    public int getCredits() {
+        return credits;
     }
 
-    /**
-     * @param teacher 
-     * @return
-     */
+    // регис
+    public void addStudent(Student student)
+            throws CourseRegistrationClosedException,
+            AlreadyEnrolledException,
+            MaxStudentsExceededException {
+
+        if (!isOpenForRegistration) {
+            throw new CourseRegistrationClosedException(name);
+        }
+
+        if (enrolledStudents.contains(student)) {
+            throw new AlreadyEnrolledException(student);
+        }
+
+        if (enrolledStudents.size() >= maxStudents) {
+            throw new MaxStudentsExceededException(maxStudents);
+        }
+
+        enrolledStudents.add(student);
+    }
+
     public void addTeacher(Teacher teacher) {
-        // TODO implement here
-        return null;
+        if (!teachers.contains(teacher)) {
+            teachers.add(teacher);
+        }
     }
 
-    /**
-     * @param lesson 
-     * @return
-     */
     public void addLesson(Lesson lesson) {
-        // TODO implement here
-        return null;
+        for (Lesson l : lessons) {
+            if (l.getDate().equals(lesson.getDate()) &&
+                    l.getRoom().equals(lesson.getRoom())) {
+
+                System.out.println("Schedule conflict detected");
+                return;
+            }
+        }
+        lessons.add(lesson);
     }
 
-    /**
-     * @return
-     */
     public boolean isOpenForRegistration() {
-        // TODO implement here
-        return false;
+        return isOpenForRegistration;
     }
 
-    /**
-     * @param open 
-     * @return
-     */
     public void setOpenForRegistration(boolean open) {
-        // TODO implement here
-        return null;
+        this.isOpenForRegistration = open;
     }
 
-    /**
-     * @return
-     */
+    public int getStudentCount() {
+        return enrolledStudents.size();
+    }
+
+    @Override
     public String toString() {
-        // TODO implement here
-        return "";
+        return "Course: " + name +
+                " (" + code + "), credits=" + credits +
+                ", students=" + enrolledStudents.size();
     }
-
 }
