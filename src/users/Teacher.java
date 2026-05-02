@@ -1,238 +1,100 @@
 package users;
 
+import academic.Course;
+import academic.Mark;
+import core.Employee;
 import enums.TeacherPosition;
+import enums.UserRole;
+import research.ResearchPaper;
+import research.ResearchProject;
 import research.Researcher;
-
 import java.util.*;
 
-/**
- * 
- */
 public class Teacher extends Employee implements Researcher {
+    private static final long serialVersionUID = 10L;
 
-    /**
-     * Default constructor
-     */
-    public Teacher() {
-    }
-
-    /**
-     * 
-     */
     private TeacherPosition position;
-
-    /**
-     * 
-     */
     private List<Course> courses;
-
-    /**
-     * 
-     */
     private double rating;
-
-    /**
-     * 
-     */
-    private int hIndex;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> researchPapers;
-
-    /**
-     * 
-     */
     private List<ResearchProject> researchProjects;
-
-    /**
-     * 
-     */
     private boolean isResearcher;
 
-    /**
-     * 
-     */
-    public void Attribute1;
-
-
-
-
-
-    /**
-     * @return
-     */
-    public TeacherPosition getPosition() {
-        // TODO implement here
-        return null;
+    public Teacher(String id, String firstName, String lastName, String email, String password, double salary, TeacherPosition position) {
+        super(id, firstName, lastName, email, password, UserRole.TEACHER, salary);
+        this.position = position;
+        this.courses = new ArrayList<>();
+        this.researchPapers = new ArrayList<>();
+        this.researchProjects = new ArrayList<>();
+        this.rating = 0.0;
+        this.isResearcher = false;
     }
 
-    /**
-     * @return
-     */
-    public List<Course> getCourses() {
-        // TODO implement here
-        return null;
-    }
 
-    /**
-     * @return
-     */
-    public double getRating() {
-        // TODO implement here
-        return 0.0d;
-    }
-
-    /**
-     * @return
-     */
-    public int getHIndex() {
-        // TODO implement here
-        return 0;
-    }
-
-    /**
-     * @param student 
-     * @param course 
-     * @param mark 
-     * @return
-     */
     public void putMark(Student student, Course course, Mark mark) {
-        // TODO implement here
-        return null;
+        student.viewMarks().add(mark);
+        System.out.println("Mark " + mark.getValue() + " assigned to " + student.getFullName());
     }
 
-    /**
-     * @param course 
-     * @return
-     */
     public void addCourse(Course course) {
-        // TODO implement here
-        return null;
+        if (!courses.contains(course)) {
+            this.courses.add(course);
+        }
     }
 
-    /**
-     * @param course 
-     * @return
-     */
-    public void addCourse(Course course) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param course 
-     * @return
-     */
     public List<Student> viewStudents(Course course) {
-        // TODO implement here
-        return null;
+        return new ArrayList<>();
     }
 
-    /**
-     * @param course 
-     * @return
-     */
     public String generateMarkReport(Course course) {
-        // TODO implement here
-        return "";
+        return "Mark Report for " + course.getName() + " by " + getFullName();
     }
 
-    /**
-     * @return
-     */
-    public boolean isResearcher() {
-        // TODO implement here
-        return false;
-    }
 
-    /**
-     * @param student 
-     * @param course 
-     * @param mark 
-     * @return
-     */
-    public void putMark(Student student, Course course, Mark mark) {
-        // TODO implement here
-        return null;
-    }
+    public TeacherPosition getPosition() { return position; }
+    public List<Course> getCourses() { return courses; }
+    public double getRating() { return rating; }
 
-    /**
-     * @param c 
-     * @return
-     */
-    public void printPapers(Comparator<ResearchPaper> c) {
-        // TODO implement here
-        return null;
-    }
 
-    /**
-     * @param course 
-     * @return
-     */
-    public String generateMarkReport(Course course) {
-        // TODO implement here
-        return "";
-    }
-
-    /**
-     * @return
-     */
-    public String toString() {
-        // TODO implement here
-        return "";
-    }
-
-    /**
-     * @return
-     */
+    @Override
     public int getHIndex() {
-        // TODO implement research.Researcher.getHIndex() here
-        return 0;
+        return researchPapers.size(); // Упрощенная логика для текущей версии
     }
 
-    /**
-     * @return
-     */
+    @Override
     public List<ResearchPaper> getResearchPapers() {
-        // TODO implement research.Researcher.getResearchPapers() here
-        return null;
+        return researchPapers;
     }
 
-    /**
-     * @return
-     */
-    public List<ResearchProject> getResearchProjects() {
-        // TODO implement research.Researcher.getResearchProjects() here
-        return null;
-    }
-
-    /**
-     * @param c 
-     * @return
-     */
-    public void printPapers(Comparator<ResearchPaper> c) {
-        // TODO implement research.Researcher.printPapers() here
-        return null;
-    }
-
-    /**
-     * @param paper 
-     * @return
-     */
+    @Override
     public void addResearchPaper(ResearchPaper paper) {
-        // TODO implement research.Researcher.addResearchPaper() here
-        return null;
+        this.researchPapers.add(paper);
+        this.isResearcher = true;
     }
 
-    /**
-     * @param project 
-     * @return
-     */
+    @Override
+    public List<ResearchProject> getResearchProjects() {
+        return researchProjects;
+    }
+
+    @Override
     public void addResearchProject(ResearchProject project) {
-        // TODO implement research.Researcher.addResearchProject() here
-        return null;
+        this.researchProjects.add(project);
     }
 
+    @Override
+    public void printPapers(Comparator<ResearchPaper> c) {
+        researchPapers.sort(c);
+        researchPapers.forEach(System.out::println);
+    }
+
+    public boolean isResearcher() {
+        return isResearcher;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s | Position: %s | Rating: %.1f",
+                super.toString(), position, rating);
+    }
 }

@@ -1,71 +1,51 @@
 package users;
 
+import core.Database;
+import core.Employee;
 import core.User;
+import enums.UserRole;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
-
-/**
- * 
- */
 public class Admin extends Employee {
+    private static final long serialVersionUID = 7L;
 
-    /**
-     * Default constructor
-     */
-    public Admin() {
+    private List<String> logs;
+
+    public Admin(String id, String firstName, String lastName, String email, String password, UserRole role, double salary) {
+        super(id, firstName, lastName, email, password, UserRole.ADMIN, salary);
+        this.logs = new ArrayList<>();
     }
 
-    /**
-     * 
-     */
-    private List<String> logs;
-
-    /**
-     * 
-     */
-    private List<String> logs;
-
-    /**
-     * @param user 
-     * @return
-     */
     public void addUser(User user) {
-        // TODO implement here
-        return null;
+        if (user != null) {
+            Database.getInstance().addUser(user);
+            addLog("Added user: " + user.getUserId());
+        }
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void removeUser(User user) {
-        // TODO implement here
-        return null;
+        if (user != null) {
+            Database.getInstance().removeUser(user.getUserId());
+            addLog("Removed user: " + user.getUserId());
+        }
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void updateUser(User user) {
-        // TODO implement here
-        return null;
+        addLog("Updated user: " + user.getUserId());
     }
 
-    /**
-     * @return
-     */
     public List<User> getAllUsers() {
-        // TODO implement here
-        return null;
+        return Database.getInstance().getUsers();
     }
 
-    /**
-     * @return
-     */
-    public List<Log> viewLogs() {
-        // TODO implement here
-        return null;
+    public List<String> viewLogs() {
+        return logs;
     }
 
+    private void addLog(String action) {
+        String logEntry = new java.util.Date() + ": " + action;
+        this.logs.add(logEntry);
+        System.out.println("[ADMIN LOG] " + logEntry);
+    }
 }

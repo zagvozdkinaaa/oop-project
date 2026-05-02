@@ -21,6 +21,8 @@ public class UserFactory {
         String email = (String) data.get("email");
         String password = (String) data.get("password");
 
+        double salary = (double) data.getOrDefault("salary", 0.0);
+
         UserRole role;
         try {
             role = UserRole.valueOf(type.toUpperCase());
@@ -30,13 +32,13 @@ public class UserFactory {
         }
 
         return switch (role) {
-            case ADMIN -> new Admin(id, firstName, lastName, email, password);
+            case ADMIN -> new Admin(id, firstName, lastName, email, password, salary);
             case STUDENT -> new Student(id, firstName, lastName, email, password);
             case TEACHER -> {
-                yield new Teacher(id, firstName, lastName, email, password);
+                yield new Teacher(id, firstName, lastName, email, password, salary);
             }
             case MANAGER -> {
-                yield new Manager(id, firstName, lastName, email, password);
+                yield new Manager(id, firstName, lastName, email, password, salary);
             }
             default -> {
                 System.err.println("Unsupported user role: " + role);

@@ -1,134 +1,75 @@
 package users;
 
+import core.Database;
+import core.Employee;
+import academic.Course;
 import enums.ManagerType;
-
+import enums.UserRole;
+import enums.RequestStatus;
+import services.Request;
 import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * 
- */
 public class Manager extends Employee {
+    private static final long serialVersionUID = 8L;
 
-    /**
-     * Default constructor
-     */
-    public Manager() {
-    }
-
-    /**
-     * 
-     */
     private ManagerType type;
-
-    /**
-     * 
-     */
     private List<String> news;
-
-    /**
-     * 
-     */
     private List<Course> managedCourses;
 
+    public Manager(String id, String firstName, String lastName, String email, String password, double salary, ManagerType type) {
+        super(id, firstName, lastName, email, password, UserRole.MANAGER, salary);
+        this.type = type;
+        this.news = new ArrayList<>();
+        this.managedCourses = new ArrayList<>();
+    }
 
-    /**
-     * @param student 
-     * @param course 
-     * @return
-     */
     public void approveRegistration(Student student, Course course) {
-        // TODO implement here
-        return null;
+        student.getCourses().add(course);
+        System.out.println("Registration approved for " + student.getFullName() + " for " + course.getName());
     }
 
     /**
-     * @param Course c 
-     * @param Teacher t 
-     * @return
-     */
-    public void assignTeacher(void Course c, void Teacher t) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    public String createReport() {
-        // TODO implement here
-        return "";
-    }
-
-    /**
-     * @return
-     */
-    public void manageNews() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param course 
-     * @param major 
-     * @param year 
-     * @return
-     */
-    public void addCourseForRegistration(Course course, String major, StudentYear year) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param teacher 
-     * @param course 
-     * @return
+     * Assigns a teacher to a specific course.
      */
     public void assignTeacherToCourse(Teacher teacher, Course course) {
-        // TODO implement here
-        return null;
+        course.setInstructor(teacher);
+        System.out.println("Teacher " + teacher.getFullName() + " assigned to " + course.getName());
     }
 
-    /**
-     * @param news 
-     * @return
-     */
-    public void addNews(String news) {
-        // TODO implement here
-        return null;
+    public void addNews(String newsContent) {
+        this.news.add(newsContent);
+        // Можно также добавить новость в глобальный список Database, если он там есть
     }
 
-    /**
-     * @param comparator 
-     * @return
-     */
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
-        // TODO implement here
-        return null;
+        return Database.getInstance().getUsers().stream()
+                .filter(u -> u instanceof Student)
+                .map(u -> (Student) u)
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 
-    /**
-     * @return
-     */
     public List<Teacher> viewAllTeachers() {
-        // TODO implement here
-        return null;
+        return Database.getInstance().getUsers().stream()
+                .filter(u -> u instanceof Teacher)
+                .map(u -> (Teacher) u)
+                .collect(Collectors.toList());
     }
 
-    /**
-     * @return
-     */
-    public List<Request> viewRequests() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param request 
-     * @return
-     */
     public void approveRequest(Request request) {
-        // TODO implement here
-        return null;
+        if (request != null) {
+            request.setStatus(RequestStatus.APPROVED);
+            System.out.println("Request approved.");
+        }
     }
 
+    public String createReport() {
+        return "Academic Report - Total Courses: " + managedCourses.size();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Type: " + type;
+    }
 }

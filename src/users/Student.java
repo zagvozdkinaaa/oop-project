@@ -1,251 +1,124 @@
 package users;
 
+import academic.Course;
+import academic.Mark;
+import academic.Transcript;
 import core.User;
+import enums.UserRole;
+import research.ResearchPaper;
+import research.ResearchProject;
 import research.Researcher;
-
 import java.util.*;
 
-/**
- * 
- */
 public class Student extends User implements Researcher, Comparable<Student> {
+    private static final long serialVersionUID = 9L;
 
-    /**
-     * Default constructor
-     */
-    public Student() {
-    }
-
-    /**
-     * 
-     */
     private double gpa;
-
-    /**
-     * 
-     */
     private int year;
-
-    /**
-     * 
-     */
     private String major;
-
-    /**
-     * 
-     */
     private int credits;
-
-    /**
-     * 
-     */
     private List<Course> courses;
-
-    /**
-     * 
-     */
     private List<Mark> marks;
-
-    /**
-     * 
-     */
     private Transcript transcript;
-
-    /**
-     * 
-     */
     private Researcher supervisor;
-
-    /**
-     * 
-     */
     private int failCount;
-
-    /**
-     * 
-     */
     private List<ResearchPaper> researchPapers;
-
-    /**
-     * 
-     */
     private List<ResearchProject> researchProjects;
-
-    /**
-     * 
-     */
     private boolean isResearcher;
 
+    public Student(String id, String firstName, String lastName, String email, String password) {
+        super(id, firstName, lastName, email, password, UserRole.STUDENT);
+        this.courses = new ArrayList<>();
+        this.marks = new ArrayList<>();
+        this.researchPapers = new ArrayList<>();
+        this.researchProjects = new ArrayList<>();
+        this.transcript = new Transcript();
+        this.isResearcher = false;
+        this.gpa = 0.0;
+    }
 
+    // --- Academic Methods ---
 
-
-
-
-
-
-
-
-
-    /**
-     * @param course 
-     * @return
-     */
     public void registerCourse(Course course) {
-        // TODO implement here
-        return null;
+        if (!courses.contains(course)) {
+            courses.add(course);
+        }
     }
 
-    /**
-     * @param course 
-     * @return
-     */
     public void dropCourse(Course course) {
-        // TODO implement here
-        return null;
+        courses.remove(course);
     }
 
-    /**
-     * @return
-     */
     public List<Course> viewCourses() {
-        // TODO implement here
-        return null;
+        return courses;
     }
 
-    /**
-     * @param Course c 
-     * @return
-     */
-    public List<Student> viewStudents(void Course c) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @return
-     */
     public List<Mark> viewMarks() {
-        // TODO implement here
-        return null;
+        return marks;
     }
 
-    /**
-     * @param teacher 
-     * @param rating 
-     * @return
-     */
-    public void rateTeacher(Teacher teacher, double rating) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @return
-     */
     public Transcript viewTranscript() {
-        // TODO implement here
-        return null;
+        return transcript;
     }
 
-    /**
-     * @return
-     */
     public double getGpa() {
-        // TODO implement here
-        return 0.0d;
+        return gpa;
     }
 
-    /**
-     * @return
-     */
     public int getCredits() {
-        // TODO implement here
-        return 0;
+        return credits;
     }
 
-    /**
-     * @param teacher 
-     * @return
-     */
-    public void setSupervisor(Teacher teacher) {
-        // TODO implement here
-        return null;
+
+    public void setSupervisor(Researcher supervisor) {
+        this.supervisor = supervisor;
+        this.isResearcher = true;
     }
 
-    /**
-     * @return
-     */
-    public Teacher getSupervisor() {
-        // TODO implement here
-        return null;
+    public Researcher getSupervisor() {
+        return supervisor;
     }
 
-    /**
-     * @param other 
-     * @return
-     */
-    public int compareTo(Student other) {
-        // TODO implement here
-        return 0;
-    }
-
-    /**
-     * @return
-     */
-    public String toString() {
-        // TODO implement here
-        return "";
-    }
-
-    /**
-     * @return
-     */
+    @Override
     public int getHIndex() {
-        // TODO implement research.Researcher.getHIndex() here
-        return 0;
+        return researchPapers.size();
     }
 
-    /**
-     * @return
-     */
+    @Override
     public List<ResearchPaper> getResearchPapers() {
-        // TODO implement research.Researcher.getResearchPapers() here
-        return null;
+        return researchPapers;
     }
 
-    /**
-     * @return
-     */
-    public List<ResearchProject> getResearchProjects() {
-        // TODO implement research.Researcher.getResearchProjects() here
-        return null;
-    }
-
-    /**
-     * @param c 
-     * @return
-     */
-    public void printPapers(Comparator<ResearchPaper> c) {
-        // TODO implement research.Researcher.printPapers() here
-        return null;
-    }
-
-    /**
-     * @param paper 
-     * @return
-     */
+    @Override
     public void addResearchPaper(ResearchPaper paper) {
-        // TODO implement research.Researcher.addResearchPaper() here
-        return null;
+        this.researchPapers.add(paper);
+        this.isResearcher = true;
     }
 
-    /**
-     * @param project 
-     * @return
-     */
+    @Override
+    public List<ResearchProject> getResearchProjects() {
+        return researchProjects;
+    }
+
+    @Override
     public void addResearchProject(ResearchProject project) {
-        // TODO implement research.Researcher.addResearchProject() here
-        return null;
+        this.researchProjects.add(project);
     }
 
+    @Override
+    public void printPapers(Comparator<ResearchPaper> c) {
+        researchPapers.sort(c);
+        researchPapers.forEach(System.out::println);
+    }
+
+    @Override
+    public int compareTo(Student other) {
+        return Double.compare(other.getGpa(), this.getGpa());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s | Major: %s | GPA: %.2f | Year: %d",
+                super.toString(), major, gpa, year);
+    }
 }
