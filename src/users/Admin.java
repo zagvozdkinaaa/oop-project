@@ -12,7 +12,7 @@ public class Admin extends Employee {
 
     private List<String> logs;
 
-    public Admin(String id, String firstName, String lastName, String email, String password, UserRole role, double salary) {
+    public Admin(String id, String firstName, String lastName, String email, String password, double salary) {
         super(id, firstName, lastName, email, password, UserRole.ADMIN, salary);
         this.logs = new ArrayList<>();
     }

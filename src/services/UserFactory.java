@@ -35,10 +35,12 @@ public class UserFactory {
             case ADMIN -> new Admin(id, firstName, lastName, email, password, salary);
             case STUDENT -> new Student(id, firstName, lastName, email, password);
             case TEACHER -> {
-                yield new Teacher(id, firstName, lastName, email, password, salary);
+                enums.TeacherPosition position = (enums.TeacherPosition) data.getOrDefault("position", enums.TeacherPosition.TUTOR);
+                yield new Teacher(id, firstName, lastName, email, password, salary,  position);
             }
             case MANAGER -> {
-                yield new Manager(id, firstName, lastName, email, password, salary);
+                enums.ManagerType managerType = (enums.ManagerType) data.getOrDefault("managerType", enums.ManagerType.OR);
+                yield new Manager(id, firstName, lastName, email, password, managerType, salary);
             }
             default -> {
                 System.err.println("Unsupported user role: " + role);

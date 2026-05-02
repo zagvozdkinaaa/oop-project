@@ -17,7 +17,7 @@ public class Manager extends Employee {
     private List<String> news;
     private List<Course> managedCourses;
 
-    public Manager(String id, String firstName, String lastName, String email, String password, double salary, ManagerType type) {
+    public Manager(String id, String firstName, String lastName, String email, String password, ManagerType type, double salary) {
         super(id, firstName, lastName, email, password, UserRole.MANAGER, salary);
         this.type = type;
         this.news = new ArrayList<>();
