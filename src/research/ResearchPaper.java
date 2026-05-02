@@ -2,145 +2,68 @@ package research;
 
 import java.util.*;
 
-/**
- * 
- */
 public class ResearchPaper implements Comparable<ResearchPaper> {
 
-    /**
-     * Default constructor
-     */
-    public ResearchPaper() {
-    }
-
-    /**
-     * 
-     */
     private String paperId;
-
-    /**
-     * 
-     */
     private String title;
-
-    /**
-     * 
-     */
     private List<String> authors;
-
-    /**
-     * 
-     */
     private String journal;
-
-    /**
-     * 
-     */
     private String doi;
-
-    /**
-     * 
-     */
     private Date date;
-
-    /**
-     * 
-     */
     private int citations;
-
-    /**
-     * 
-     */
     private int pages;
-
-    /**
-     * 
-     */
-    private keywords: List~String~;
-
-    /**
-     * 
-     */
     private List<String> keywords;
-
-    /**
-     * 
-     */
     private String topic;
 
+    public ResearchPaper(String title, int citations, int pages, Date date) {
+        this.title = title;
+        this.citations = citations;
+        this.pages = pages;
+        this.date = date;
+        this.authors = new ArrayList<>();
+        this.keywords = new ArrayList<>();
+    }
 
-
-
-
-
-    /**
-     * @return
-     */
     public String getTitle() {
-        // TODO implement here
-        return "";
+        return title;
     }
 
-    /**
-     * @return
-     */
     public int getCitations() {
-        // TODO implement here
-        return 0;
+        return citations;
     }
 
-    /**
-     * @return
-     */
     public int getPages() {
-        // TODO implement here
-        return 0;
+        return pages;
     }
 
-    /**
-     * @return
-     */
     public Date getDate() {
-        // TODO implement here
-        return null;
+        return date;
     }
 
-    /**
-     * @return
-     */
     public String getDoi() {
-        // TODO implement here
-        return "";
+        return doi;
     }
 
-    /**
-     * 
-     */
-    public void equals() {
-        // TODO implement here
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ResearchPaper)) return false;
+        ResearchPaper that = (ResearchPaper) o;
+        return Objects.equals(doi, that.doi);
     }
 
-    /**
-     * 
-     */
-    public void hashCode() {
-        // TODO implement here
+    @Override
+    public int hashCode() {
+        return Objects.hash(doi);
     }
 
-    /**
-     * 
-     */
-    public void toString() {
-        // TODO implement here
+    @Override
+    public String toString() {
+        return title + " (" + citations + " citations)";
     }
 
-    /**
-     * @param other 
-     * @return
-     */
+    @Override
     public int compareTo(ResearchPaper other) {
-        // TODO implement here
-        return 0;
+        return Integer.compare(other.citations, this.citations); 
     }
-
 }
