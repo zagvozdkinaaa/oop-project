@@ -20,19 +20,26 @@ public class Admin extends Employee {
     public void addUser(User user) {
         if (user != null) {
             Database.getInstance().addUser(user);
-            addLog("Added user: " + user.getUserId());
+            logs.add("Added user: " + user.getUserId());
         }
     }
 
     public void removeUser(User user) {
         if (user != null) {
             Database.getInstance().removeUser(user.getUserId());
-            addLog("Removed user: " + user.getUserId());
+            logs.add("Removed user: " + user.getUserId());
         }
     }
 
     public void updateUser(User user) {
-        addLog("Updated user: " + user.getUserId());
+        List<User> users = core.Database.getInstance().getUsers();
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getUserId().equals(user.getUserId())) {
+                users.set(i, user);
+                logs.add("Updated user: " + user.getUserId());
+                return;
+            }
+        }
     }
 
     public List<User> getAllUsers() {
@@ -41,11 +48,5 @@ public class Admin extends Employee {
 
     public List<String> viewLogs() {
         return logs;
-    }
-
-    private void addLog(String action) {
-        String logEntry = new java.util.Date() + ": " + action;
-        this.logs.add(logEntry);
-        System.out.println("[ADMIN LOG] " + logEntry);
     }
 }

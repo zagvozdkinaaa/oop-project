@@ -16,40 +16,49 @@ public class Teacher extends Employee implements Researcher {
     private TeacherPosition position;
     private List<Course> courses;
     private double rating;
+    private int hIndex;
     private List<ResearchPaper> researchPapers;
     private List<ResearchProject> researchProjects;
     private boolean isResearcher;
 
     public Teacher(String id, String firstName, String lastName, String email, String password, double salary, TeacherPosition position) {
-        super(id, firstName, lastName, email, password, UserRole.TEACHER, salary);
+        super(id, firstName, lastName, email, password, enums.UserRole.TEACHER, salary);
         this.position = position;
+        this.rating = 0.0;
+        this.hIndex = 0;
         this.courses = new ArrayList<>();
         this.researchPapers = new ArrayList<>();
         this.researchProjects = new ArrayList<>();
-        this.rating = 0.0;
         this.isResearcher = false;
     }
 
 
     public void putMark(Student student, Course course, Mark mark) {
-        student.viewMarks().add(mark);
-        System.out.println("Mark " + mark.getTotal() + " assigned to " + student.getFullName());
-    }
-
-    public void addCourse(Course course) {
-        if (!courses.contains(course)) {
-            this.courses.add(course);
+        if (student != null && student.viewTranscript() != null) {
+            student.viewTranscript().addMark(mark);
         }
     }
 
+    public void addCourse(Course course) {
+        if (this.courses == null) this.courses = new ArrayList<>();
+        this.courses.add(course);
+    }
+
     public List<Student> viewStudents(Course course) {
-        return new ArrayList<>();
+        if (course != null) {
+            return course.getEnrolledStudents();
+        }
+        return null;
     }
 
     public String generateMarkReport(Course course) {
-        return "Mark Report for " + course.getName() + " by " + getFullName();
+        return "Mark report for " + (course != null ? course.getName() : "unknown");
     }
 
+    public void addRating(double r) {
+        // Simple rating update
+        this.rating = (this.rating + r) / 2;
+    }
 
     public TeacherPosition getPosition() { return position; }
     public List<Course> getCourses() { return courses; }
@@ -58,7 +67,7 @@ public class Teacher extends Employee implements Researcher {
 
     @Override
     public int getHIndex() {
-        return researchPapers.size(); // Упрощенная логика для текущей версии
+        return hIndex;
     }
 
     @Override
@@ -68,8 +77,8 @@ public class Teacher extends Employee implements Researcher {
 
     @Override
     public void addResearchPaper(ResearchPaper paper) {
+        if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
         this.researchPapers.add(paper);
-        this.isResearcher = true;
     }
 
     @Override
@@ -79,13 +88,18 @@ public class Teacher extends Employee implements Researcher {
 
     @Override
     public void addResearchProject(ResearchProject project) {
+        if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
         this.researchProjects.add(project);
     }
 
     @Override
     public void printPapers(Comparator<ResearchPaper> c) {
-        researchPapers.sort(c);
-        researchPapers.forEach(System.out::println);
+        if (this.researchPapers != null) {
+            this.researchPapers.sort(c);
+            for (ResearchPaper p : this.researchPapers) {
+                System.out.println(p);
+            }
+        }
     }
 
     public boolean isResearcher() {

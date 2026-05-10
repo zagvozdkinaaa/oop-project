@@ -56,7 +56,7 @@ public class Transcript {
                 .format(generatedDate);
 
         sb.append("Transcript for: ")
-          .append(student != null ? student.getName() : "N/A")
+          .append(student != null ? student.getFullName() : "N/A")
           .append("\nDate: ").append(formattedDate)
           .append("\nGPA: ").append(String.format("%.2f", gpa))
           .append("\nMarks:\n");

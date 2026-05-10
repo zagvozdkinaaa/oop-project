@@ -26,28 +26,55 @@ public class Student extends User implements Researcher, Comparable<Student> {
     private List<ResearchProject> researchProjects;
     private boolean isResearcher;
 
-    public Student(String id, String firstName, String lastName, String email, String password) {
-        super(id, firstName, lastName, email, password, UserRole.STUDENT);
+    public Student(String id, String firstName, String lastName, String email, String password, String major, int year) {
+        super(id, firstName, lastName, email, password, enums.UserRole.STUDENT);
+        this.major = major;
+        this.year = year;
+        this.gpa = 0.0;
+        this.credits = 0;
         this.courses = new ArrayList<>();
         this.marks = new ArrayList<>();
+        this.transcript = new Transcript(id, this);
         this.researchPapers = new ArrayList<>();
         this.researchProjects = new ArrayList<>();
-        this.transcript = new Transcript();
         this.isResearcher = false;
-        this.gpa = 0.0;
+        this.failCount = 0;
     }
-    public void registerCourse(Course course) {
-        if (!courses.contains(course)) {
-            courses.add(course);
+
+    public void registerCourse(Course course) throws exceptions.CreditLimitExceededException, exceptions.CourseRegistrationClosedException, exceptions.AlreadyEnrolledException, exceptions.MaxStudentsExceededException {
+        if (course == null) return;
+
+        int totalCredits = this.credits + course.getCredits();
+        if (totalCredits > 21) {
+            throw new exceptions.CreditLimitExceededException(totalCredits);
         }
+
+        if (this.courses == null) this.courses = new ArrayList<>();
+        this.courses.add(course);
+        this.credits = totalCredits;
+        course.addStudent(this);
     }
 
     public void dropCourse(Course course) {
-        courses.remove(course);
+        if (this.courses != null) {
+            this.courses.remove(course);
+        }
     }
-
     public List<Course> viewCourses() {
         return courses;
+    }
+
+    public List<Student> viewStudents(Course c) {
+        if (c != null) {
+            return c.getEnrolledStudents();
+        }
+        return null;
+    }
+
+    public void rateTeacher(Teacher teacher, double rating) {
+        if (teacher != null) {
+            teacher.addRating(rating);
+        }
     }
 
     public List<Mark> viewMarks() {
@@ -66,13 +93,12 @@ public class Student extends User implements Researcher, Comparable<Student> {
         return credits;
     }
 
-    public void setSupervisor(Researcher supervisor) {
-        this.supervisor = supervisor;
-        this.isResearcher = true;
+    public void setSupervisor(Teacher teacher) {
+        this.supervisor = (Researcher) teacher;
     }
 
-    public Researcher getSupervisor() {
-        return supervisor;
+    public Teacher getSupervisor() {
+        return (Teacher) this.supervisor;
     }
 
     @Override
@@ -87,8 +113,8 @@ public class Student extends User implements Researcher, Comparable<Student> {
 
     @Override
     public void addResearchPaper(ResearchPaper paper) {
+        if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
         this.researchPapers.add(paper);
-        this.isResearcher = true;
     }
 
     @Override
@@ -98,13 +124,18 @@ public class Student extends User implements Researcher, Comparable<Student> {
 
     @Override
     public void addResearchProject(ResearchProject project) {
+        if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
         this.researchProjects.add(project);
     }
 
     @Override
     public void printPapers(Comparator<ResearchPaper> c) {
-        researchPapers.sort(c);
-        researchPapers.forEach(System.out::println);
+        if (this.researchPapers != null) {
+            this.researchPapers.sort(c);
+            for (ResearchPaper p : this.researchPapers) {
+                System.out.println(p);
+            }
+        }
     }
 
     @Override
@@ -117,4 +148,5 @@ public class Student extends User implements Researcher, Comparable<Student> {
         return String.format("%s | Major: %s | GPA: %.2f | Year: %d",
                 super.toString(), major, gpa, year);
     }
+
 }
