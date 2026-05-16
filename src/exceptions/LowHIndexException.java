@@ -1,40 +1,28 @@
 package exceptions;
 
 /**
- * 
+ * Exception thrown when a researcher's h-index is too low for a role
  */
-public class LowHIndexException {
+public class LowHIndexException extends Exception {
 
-    /**
-     * Default constructor
-     */
-    public LowHIndexException() {
-    }
-
-    /**
-     * 
-     */
     private int requiredHIndex;
-
-    /**
-     * 
-     */
     private int actualHIndex;
 
-    /**
-     * @param actual 
-     * @param required
-     */
+    public LowHIndexException() {
+        super("H-index is too low for this role");
+    }
+
     public LowHIndexException(int actual, int required) {
-        // TODO implement here
+        super("H-index " + actual + " is below required " + required);
+        this.actualHIndex = actual;
+        this.requiredHIndex = required;
     }
 
-    /**
-     * @return
-     */
-    public String getMessage() {
-        // TODO implement here
-        return "";
+    public int getRequiredHIndex() {
+        return requiredHIndex;
     }
 
+    public int getActualHIndex() {
+        return actualHIndex;
+    }
 }

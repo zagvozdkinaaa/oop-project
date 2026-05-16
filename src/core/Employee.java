@@ -1,8 +1,7 @@
 package core;
 
 import enums.UserRole;
-import services.Message;
-import users.Manager;
+import communication.Message;
 
 import java.util.*;
 

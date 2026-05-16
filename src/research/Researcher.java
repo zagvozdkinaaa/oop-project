@@ -15,4 +15,6 @@ public interface Researcher {
     void addResearchPaper(ResearchPaper paper);
 
     void addResearchProject(ResearchProject project);
+
+    boolean isResearcher();
 }

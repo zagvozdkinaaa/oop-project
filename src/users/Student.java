@@ -4,10 +4,10 @@ import academic.Course;
 import academic.Mark;
 import academic.Transcript;
 import core.User;
-import enums.UserRole;
 import research.ResearchPaper;
 import research.ResearchProject;
 import research.Researcher;
+import communication.Request;
 import java.util.*;
 
 public class Student extends User implements Researcher, Comparable<Student> {
@@ -93,8 +93,69 @@ public class Student extends User implements Researcher, Comparable<Student> {
         return credits;
     }
 
-    public void setSupervisor(Teacher teacher) {
-        this.supervisor = (Researcher) teacher;
+    /**
+     * Отправить запрос на назначение supervisor администрации
+     */
+    public Request requestSupervisor(Teacher teacher) throws exceptions.LowHIndexException {
+        if (teacher == null) {
+            throw new IllegalArgumentException("Teacher cannot be null");
+        }
+
+        if (this.year != 4) {
+            throw new IllegalArgumentException("Supervisor can only be assigned to 4th year students");
+        }
+
+        if (!(teacher instanceof Researcher)) {
+            throw new IllegalArgumentException("Supervisor must be a Researcher");
+        }
+
+        Researcher researcher = (Researcher) teacher;
+        if (!researcher.isResearcher()) {
+            throw new IllegalArgumentException("Supervisor must be an active Researcher");
+        }
+        if (researcher.getHIndex() < 3) {
+            throw new exceptions.LowHIndexException(researcher.getHIndex(), 3);
+        }
+
+        String description = String.format(
+            "Student %s (%s) requests supervisor appointment for teacher %s. Major: %s, Year: %d",
+            this.getFullName(), this.getUserId(), teacher.getFullName(), this.major, this.year
+        );
+
+        Request req = new Request(this, description, "SUPERVISOR", teacher);
+        core.Database.getInstance().addRequest(req);
+        return req;
+    }
+
+    /**
+     * Установить supervisor (вызывается администратором при одобрении запроса)
+     */
+    protected void assignSupervisor(Teacher teacher) throws exceptions.LowHIndexException {
+        if (teacher == null) {
+            throw new IllegalArgumentException("Teacher cannot be null");
+        }
+
+        if (!(teacher instanceof Researcher)) {
+            throw new IllegalArgumentException("Supervisor must be a Researcher");
+        }
+
+        Researcher researcher = (Researcher) teacher;
+        if (!researcher.isResearcher()) {
+            throw new IllegalArgumentException("Supervisor must be an active Researcher");
+        }
+        if (researcher.getHIndex() < 3) {
+            throw new exceptions.LowHIndexException(researcher.getHIndex(), 3);
+        }
+
+        this.supervisor = researcher;
+    }
+
+    /**
+     * @deprecated Используйте requestSupervisor() и Admin.approveSupervisorRequest() вместо этого
+     */
+    @Deprecated
+    public void setSupervisor(Teacher teacher) throws exceptions.LowHIndexException {
+        assignSupervisor(teacher);
     }
 
     public Teacher getSupervisor() {
@@ -115,6 +176,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
     public void addResearchPaper(ResearchPaper paper) {
         if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
         this.researchPapers.add(paper);
+        this.isResearcher = true;
     }
 
     @Override
@@ -126,6 +188,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
     public void addResearchProject(ResearchProject project) {
         if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
         this.researchProjects.add(project);
+        this.isResearcher = true;
     }
 
     @Override
@@ -141,6 +204,11 @@ public class Student extends User implements Researcher, Comparable<Student> {
     @Override
     public int compareTo(Student other) {
         return Double.compare(other.getGpa(), this.getGpa());
+    }
+
+    @Override
+    public boolean isResearcher() {
+        return this.isResearcher;
     }
 
     @Override

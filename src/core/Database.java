@@ -1,9 +1,10 @@
 package core;
 
 import academic.Course;
+import communication.Request;
 import research.ResearchPaper;
 import research.ResearchProject;
-import services.Message;
+import communication.Message;
 
 import java.io.*;
 import java.util.*;
@@ -19,6 +20,7 @@ public class Database implements Serializable {
     private List<ResearchPaper> researchPapers;
     private List<ResearchProject> researchProjects;
     private List<Message> messages;
+    private List<Request> requests;
 
     private Database() {
         this.users = new ArrayList<>();
@@ -26,6 +28,7 @@ public class Database implements Serializable {
         this.researchPapers = new ArrayList<>();
         this.researchProjects = new ArrayList<>();
         this.messages = new ArrayList<>();
+        this.requests = new ArrayList<>();
     }
 
     public static Database getInstance() {
@@ -72,6 +75,16 @@ public class Database implements Serializable {
     }
     public List<ResearchProject> getResearchProjects() {
         return researchProjects;
+    }
+
+    public List<Request> getRequests() {
+        return requests;
+    }
+
+    public void addRequest(Request request) {
+        if (request != null && !requests.contains(request)) {
+            requests.add(request);
+        }
     }
 
     public void addUser(User user) {

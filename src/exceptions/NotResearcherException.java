@@ -1,29 +1,20 @@
 package exceptions;
 
 /**
- * 
+ * Exception thrown when a non-researcher tries to join a research project
  */
-public class NotResearcherException {
+public class NotResearcherException extends Exception {
 
-    /**
-     * Default constructor
-     */
     public NotResearcherException() {
+        super("User is not a researcher");
     }
 
-    /**
-     * @param user
-     */
-    public NotResearcherException(void user) {
-        // TODO implement here
+    public NotResearcherException(String message) {
+        super(message);
     }
 
-    /**
-     * @return
-     */
-    public String getMessage() {
-        // TODO implement here
-        return "";
+    public NotResearcherException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 }

@@ -16,6 +16,7 @@ public class Teacher extends Employee implements Researcher {
     private TeacherPosition position;
     private List<Course> courses;
     private double rating;
+    private List<Double> ratingHistory;
     private int hIndex;
     private List<ResearchPaper> researchPapers;
     private List<ResearchProject> researchProjects;
@@ -25,11 +26,12 @@ public class Teacher extends Employee implements Researcher {
         super(id, firstName, lastName, email, password, enums.UserRole.TEACHER, salary);
         this.position = position;
         this.rating = 0.0;
+        this.ratingHistory = new ArrayList<>();
         this.hIndex = 0;
         this.courses = new ArrayList<>();
         this.researchPapers = new ArrayList<>();
         this.researchProjects = new ArrayList<>();
-        this.isResearcher = false;
+        this.isResearcher = position == TeacherPosition.PROFESSOR || position == TeacherPosition.ASSOCIATE_PROFESSOR;
     }
 
 
@@ -56,14 +58,39 @@ public class Teacher extends Employee implements Researcher {
     }
 
     public void addRating(double r) {
-        // Simple rating update
-        this.rating = (this.rating + r) / 2;
+        if (r >= 0 && r <= 5) {
+            this.ratingHistory.add(r);
+            double sum = 0;
+            for (double rating : ratingHistory) {
+                sum += rating;
+            }
+            this.rating = sum / ratingHistory.size();
+        }
     }
 
-    public TeacherPosition getPosition() { return position; }
-    public List<Course> getCourses() { return courses; }
-    public double getRating() { return rating; }
+    public TeacherPosition getPosition() {
+        return position;
+    }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public List<Double> getRatingHistory() {
+        return ratingHistory;
+    }
+
+    public int getRatingCount() {
+        return ratingHistory.size();
+    }
+
+    private void updateHIndex() {
+        this.hIndex = researchPapers.size();
+    }
 
     @Override
     public int getHIndex() {
@@ -79,6 +106,8 @@ public class Teacher extends Employee implements Researcher {
     public void addResearchPaper(ResearchPaper paper) {
         if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
         this.researchPapers.add(paper);
+        updateHIndex();
+        this.isResearcher = true;
     }
 
     @Override
@@ -90,6 +119,7 @@ public class Teacher extends Employee implements Researcher {
     public void addResearchProject(ResearchProject project) {
         if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
         this.researchProjects.add(project);
+        this.isResearcher = true;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class FailLimitExceededException extends Exception {
     }
 
     private static String buildMessage(Student student, int failedCourses) {
-        String name = (student != null) ? student.getName() : "Unknown student";
+        String name = (student != null) ? student.getFullName() : "Unknown student";
 
         return "Fail limit exceeded: " + name +
                " has " + failedCourses +

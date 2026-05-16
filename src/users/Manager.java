@@ -1,6 +1,5 @@
 package users;
 
-import core.Database;
 import core.Employee;
 import academic.Course;
 import enums.ManagerType;
@@ -10,9 +9,8 @@ import enums.RequestStatus;
 import exceptions.AlreadyEnrolledException;
 import exceptions.CourseRegistrationClosedException;
 import exceptions.MaxStudentsExceededException;
-import services.Request;
+import communication.Request;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Manager extends Employee {
     private static final long serialVersionUID = 8L;

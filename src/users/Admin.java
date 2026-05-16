@@ -4,6 +4,8 @@ import core.Database;
 import core.Employee;
 import core.User;
 import enums.UserRole;
+import enums.RequestStatus;
+import communication.Request;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +50,44 @@ public class Admin extends Employee {
 
     public List<String> viewLogs() {
         return logs;
+    }
+
+    public List<Request> viewSupervisorRequests() {
+        List<Request> allRequests = Database.getInstance().getRequests();
+        List<Request> supervisorReqs = new ArrayList<>();
+        if (allRequests != null) {
+            for (Request req : allRequests) {
+                if ("SUPERVISOR".equals(req.getRequestType()) && req.getStatus() == RequestStatus.PENDING) {
+                    supervisorReqs.add(req);
+                }
+            }
+        }
+        return supervisorReqs;
+    }
+
+    public void approveSupervisorRequest(Request req) {
+        if (req != null && "SUPERVISOR".equals(req.getRequestType())) {
+            try {
+                if (req.getSender() instanceof Student) {
+                    Student student = (Student) req.getSender();
+                    student.assignSupervisor(req.getSupervisorCandidate());
+                    req.setStatus(RequestStatus.APPROVED);
+                    logs.add("Approved supervisor request for student: " + student.getUserId());
+                }
+            } catch (exceptions.LowHIndexException e) {
+                System.err.println("Cannot approve: " + e.getMessage());
+                req.setStatus(RequestStatus.REJECTED);
+                logs.add("Rejected supervisor request (Low H-Index) for student: " + req.getSender().getUserId());
+            } catch (Exception e) {
+                System.err.println("Error approving request: " + e.getMessage());
+            }
+        }
+    }
+
+    public void rejectSupervisorRequest(Request req) {
+        if (req != null && "SUPERVISOR".equals(req.getRequestType())) {
+            req.setStatus(RequestStatus.REJECTED);
+            logs.add("Rejected supervisor request for user: " + req.getSender().getUserId());
+        }
     }
 }

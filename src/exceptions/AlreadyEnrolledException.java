@@ -10,7 +10,7 @@ public class AlreadyEnrolledException extends Exception {
     private final Student student;
 
     public AlreadyEnrolledException(Student student) {
-        super("Student " + student.getName() + " is already enrolled.");
+        super("Student " + student.getFullName() + " is already enrolled.");
         this.student = student;
     }
 
