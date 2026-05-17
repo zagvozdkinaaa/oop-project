@@ -8,6 +8,7 @@ import research.ResearchPaper;
 import research.ResearchProject;
 import research.Researcher;
 import communication.Request;
+import enums.RequestType;
 import java.util.*;
 
 public class Student extends User implements Researcher, Comparable<Student> {
@@ -122,7 +123,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
             this.getFullName(), this.getUserId(), teacher.getFullName(), this.major, this.year
         );
 
-        Request req = new Request(this, description, "SUPERVISOR", teacher);
+        Request req = new Request(this, description, RequestType.SUPERVISOR, teacher);
         core.Database.getInstance().addRequest(req);
         return req;
     }

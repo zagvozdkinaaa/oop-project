@@ -5,6 +5,7 @@ import core.Employee;
 import core.User;
 import enums.UserRole;
 import enums.RequestStatus;
+import enums.RequestType;
 import communication.Request;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Admin extends Employee {
         List<Request> supervisorReqs = new ArrayList<>();
         if (allRequests != null) {
             for (Request req : allRequests) {
-                if ("SUPERVISOR".equals(req.getRequestType()) && req.getStatus() == RequestStatus.PENDING) {
+                if (req.getRequestType() == RequestType.SUPERVISOR && req.getStatus() == RequestStatus.PENDING) {
                     supervisorReqs.add(req);
                 }
             }
@@ -66,7 +67,7 @@ public class Admin extends Employee {
     }
 
     public void approveSupervisorRequest(Request req) {
-        if (req != null && "SUPERVISOR".equals(req.getRequestType())) {
+        if (req != null && req.getRequestType() == RequestType.SUPERVISOR) {
             try {
                 if (req.getSender() instanceof Student) {
                     Student student = (Student) req.getSender();
@@ -85,7 +86,7 @@ public class Admin extends Employee {
     }
 
     public void rejectSupervisorRequest(Request req) {
-        if (req != null && "SUPERVISOR".equals(req.getRequestType())) {
+        if (req != null && req.getRequestType() == RequestType.SUPERVISOR) {
             req.setStatus(RequestStatus.REJECTED);
             logs.add("Rejected supervisor request for user: " + req.getSender().getUserId());
         }

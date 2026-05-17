@@ -2,6 +2,7 @@ package communication;
 
 import core.User;
 import enums.RequestStatus;
+import enums.RequestType;
 import users.Teacher;
 
 import java.util.*;
@@ -14,7 +15,7 @@ public class Request {
     private String description;
     private RequestStatus status;
     private Date date;
-    private String requestType; // "GENERAL", "SUPERVISOR"
+    private RequestType requestType; // GENERAL, SUPERVISOR
     private Teacher supervisorCandidate; // for SUPERVISOR requests
 
     public Request(User sender, String description) {
@@ -23,11 +24,11 @@ public class Request {
         this.description = description;
         this.status = RequestStatus.PENDING;
         this.date = new Date();
-        this.requestType = "GENERAL";
+        this.requestType = RequestType.GENERAL;
         this.supervisorCandidate = null;
     }
 
-    public Request(User sender, String description, String requestType, Teacher supervisorCandidate) {
+    public Request(User sender, String description, RequestType requestType, Teacher supervisorCandidate) {
         this.requestId = UUID.randomUUID().toString();
         this.sender = sender;
         this.description = description;
@@ -53,7 +54,7 @@ public class Request {
         return description;
     }
 
-    public String getRequestType() {
+    public RequestType getRequestType() {
         return requestType;
     }
 
@@ -69,7 +70,7 @@ public class Request {
         String baseInfo = String.format("Request[ID: %s, From: %s, Status: %s, Date: %s]\nDescription: %s",
                 requestId, sender.getFullName(), status, date, description);
 
-        if ("SUPERVISOR".equals(requestType) && supervisorCandidate != null) {
+        if (RequestType.SUPERVISOR == requestType && supervisorCandidate != null) {
             baseInfo += "\nType: SUPERVISOR REQUEST\nRequested Supervisor: " + supervisorCandidate.getFullName();
         }
 
