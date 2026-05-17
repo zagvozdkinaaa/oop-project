@@ -77,9 +77,10 @@ public class Lesson {
     public String toString() {
         return "Lesson: " + type +
                 ", course=" + (course != null ? course.getName() : "N/A") +
-                ", teacher=" + (teacher != null ? teacher.getName() : "N/A") +
+                ", teacher=" + (teacher != null ? teacher.getFullName() : "N/A") +
                 ", room=" + room +
                 ", date=" + date +
                 ", duration=" + duration + " min";
+
     }
 }
