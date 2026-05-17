@@ -4,16 +4,19 @@ import users.Student;
 import users.Teacher;
 import exceptions.*;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Course {
+public class Course implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String courseId;
     private String name;
     private String code;
     private int credits;
 
-    private int maxStudents = 30; // бонус
+    private int maxStudents = 30;
 
     private List<Teacher> teachers;
     private List<Student> enrolledStudents;
@@ -57,22 +60,23 @@ public class Course {
         return credits;
     }
 
-    // регис
+    // registration
     public void addStudent(Student student)
             throws CourseRegistrationClosedException,
             AlreadyEnrolledException,
             MaxStudentsExceededException {
 
         if (!isOpenForRegistration) {
-            throw new CourseRegistrationClosedException(name);
+            throw new RuntimeException("Course closed");
         }
 
         if (enrolledStudents.contains(student)) {
-            throw new AlreadyEnrolledException(student);
+            return; 
         }
 
         if (enrolledStudents.size() >= maxStudents) {
-            throw new MaxStudentsExceededException(maxStudents);
+            isOpenForRegistration = false;
+            throw new RuntimeException("Course is full");
         }
 
         enrolledStudents.add(student);
@@ -93,6 +97,7 @@ public class Course {
                 return;
             }
         }
+
         lessons.add(lesson);
     }
 
