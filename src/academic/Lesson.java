@@ -16,7 +16,6 @@ public class Lesson {
     private Teacher teacher;
     private int duration;
 
-    // attendance
     private Map<Student, Boolean> attendance = new HashMap<>();
 
     public Lesson(String lessonId, Course course, LessonType type,
@@ -62,7 +61,6 @@ public class Lesson {
         return type == LessonType.LECTURE;
     }
 
-    // attendance
     public void markAttendance(Student student, boolean present) {
         attendance.put(student, present);
     }
@@ -71,6 +69,20 @@ public class Lesson {
         return attendance.entrySet().stream()
                 .filter(e -> e.getKey().equals(student) && !e.getValue())
                 .count();
+    }
+
+    public double getAttendancePercentage(Student student) {
+        long totalLessons = attendance.size();
+
+        if (totalLessons == 0) {
+            return 100;
+        }
+
+        long presentLessons = attendance.entrySet().stream()
+                .filter(e -> e.getKey().equals(student) && e.getValue())
+                .count();
+
+        return (presentLessons * 100.0) / totalLessons;
     }
 
     @Override
