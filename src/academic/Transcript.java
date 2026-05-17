@@ -2,9 +2,9 @@ package academic;
 
 import users.Student;
 import java.util.*;
-
-public class Transcript {
-
+import java.io.Serializable;
+public class Transcript implements Serializable{
+	private static final long serialVersionUID = 1L;
     private String transcriptId;
     private Student student;
     private List<Mark> marks;
