@@ -24,8 +24,10 @@ public abstract class User implements Serializable {
         this.role = role;
     }
 
-    public boolean login(String login, String password) {
-        return this.email.equals(email) && this.password.equals(password);
+    public boolean login(String emailInput, String passwordInput) {
+        return this.email != null && this.password != null &&
+               this.email.equalsIgnoreCase(emailInput) && 
+               this.password.equals(passwordInput);
     }
 
     public void logout() {
