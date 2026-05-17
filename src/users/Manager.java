@@ -1,6 +1,5 @@
 package users;
 
-import core.Database;
 import core.Employee;
 import academic.Course;
 import enums.ManagerType;
@@ -10,9 +9,8 @@ import enums.RequestStatus;
 import exceptions.AlreadyEnrolledException;
 import exceptions.CourseRegistrationClosedException;
 import exceptions.MaxStudentsExceededException;
-import services.Request;
+import communication.Request;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Manager extends Employee {
     private static final long serialVersionUID = 8L;
@@ -46,7 +44,9 @@ public class Manager extends Employee {
             course.setOpenForRegistration(true);
         }
     }
-
+    
+ 
+    
     public void manageNews() {
         System.out.println("Current news count: " + (news != null ? news.size() : 0));
     }
@@ -56,6 +56,18 @@ public class Manager extends Employee {
         this.news.add(news);
     }
 
+    public void openCourse(Course course) {
+        if (course != null) {
+            course.setOpenForRegistration(true);
+        }
+    }
+
+    public void closeCourse(Course course) {
+        if (course != null) {
+            course.setOpenForRegistration(false);
+        }
+    }
+    
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
         List<Student> students = new ArrayList<>();
         for (core.User u : core.Database.getInstance().getUsers()) {
@@ -87,7 +99,7 @@ public class Manager extends Employee {
     }
 
     public List<Request> viewRequests() {
-        return new ArrayList<>(); // Request storage in Database
+        return new ArrayList<>(); 
     }
 
     public String createReport() {
@@ -98,4 +110,4 @@ public class Manager extends Employee {
     public String toString() {
         return super.toString() + " | Type: " + type;
     }
-}
+}	
