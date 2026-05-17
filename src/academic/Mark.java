@@ -15,8 +15,10 @@ public class Mark {
 
     private double total;
 
+    private boolean retakeRequired;
+
     public Mark(String markId, Student student, Course course,
-                double firstAttestation, double secondAttestation, double finalExam)
+            double firstAttestation, double secondAttestation, double finalExam)
             throws InvalidMarkException {
 
         validate(firstAttestation);
@@ -30,14 +32,31 @@ public class Mark {
         this.secondAttestation = secondAttestation;
         this.finalExam = finalExam;
 
+        this.retakeRequired = false;
+
         this.total = calculateTotal();
     }
 
-    //  bonus
     private void validate(double value) throws InvalidMarkException {
         if (value < 0 || value > 100) {
             throw new InvalidMarkException(value);
         }
+    }
+
+    public void checkRetake(double attendancePercent) {
+
+        if (attendancePercent < 70) {
+
+            retakeRequired = true;
+
+            finalExam = 0;
+
+            calculateTotal();
+        }
+    }
+
+    public boolean isRetakeRequired() {
+        return retakeRequired;
     }
 
     public double calculateTotal() {
@@ -50,23 +69,38 @@ public class Mark {
     }
 
     public boolean isPassed() {
-        return total >= 50;
+        return total >= 50 && !retakeRequired;
     }
 
     public String getLetterGrade() {
+
+        if (retakeRequired)
+            return "F";
+
         double t = Math.max(0, Math.min(100, total));
 
-        if (t >= 95) return "A";
-        else if (t >= 90) return "A-";
-        else if (t >= 85) return "B+";
-        else if (t >= 80) return "B";
-        else if (t >= 75) return "B-";
-        else if (t >= 70) return "C+";
-        else if (t >= 65) return "C";
-        else if (t >= 60) return "C-";
-        else if (t >= 55) return "D+";
-        else if (t >= 50) return "D";
-        else return "F";
+        if (t >= 95)
+            return "A";
+        else if (t >= 90)
+            return "A-";
+        else if (t >= 85)
+            return "B+";
+        else if (t >= 80)
+            return "B";
+        else if (t >= 75)
+            return "B-";
+        else if (t >= 70)
+            return "C+";
+        else if (t >= 65)
+            return "C";
+        else if (t >= 60)
+            return "C-";
+        else if (t >= 55)
+            return "D+";
+        else if (t >= 50)
+            return "D";
+        else
+            return "F";
     }
 
     @Override
@@ -74,6 +108,7 @@ public class Mark {
         return "Course: " + (course != null ? course.getName() : "N/A") +
                 ", Total: " + total +
                 ", Grade: " + getLetterGrade() +
-                ", Passed: " + (isPassed() ? "Yes" : "No");
+                ", Passed: " + (isPassed() ? "Yes" : "No") +
+                ", Retake: " + (retakeRequired ? "Required" : "No");
     }
 }
