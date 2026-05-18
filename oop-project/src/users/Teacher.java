@@ -4,6 +4,9 @@ import enums.TeacherPosition;
 import research.Researcher;
 
 import java.util.*;
+import academic.Course;
+import academic.Lesson;
+import academic.Mark;
 
 /**
  * 
@@ -51,10 +54,7 @@ public class Teacher extends Employee implements Researcher {
      */
     private boolean isResearcher;
 
-    /**
-     * 
-     */
-    public void Attribute1;
+    // public void Attribute1;
 
     /**
      * @return
@@ -96,7 +96,22 @@ public class Teacher extends Employee implements Researcher {
      */
     public void putMark(Student student, Course course, Mark mark) {
         // TODO implement here
-        return null;
+    }
+
+    public void markAttendance(Lesson lesson, Student student, boolean isPresent) {
+        lesson.setAttendance(student, isPresent);
+
+        Course course = lesson.getCourse();
+        if (course != null) {
+            Mark mark = student.viewMarks().stream()
+                    .filter(m -> m.getCourse().equals(course))
+                    .findFirst().orElse(null);
+
+            if (mark != null) {
+                mark.setTotalLessons(course.getLessons().size());
+                mark.setAttendedLessons(course.getAttendedLessonsForStudent(student));
+            }
+        }
     }
 
     /**

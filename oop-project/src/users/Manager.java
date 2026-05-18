@@ -1,135 +1,78 @@
 package users;
 
 import enums.ManagerType;
-
+import core.Employee;
+import academic.Course;
+import services.Request;
 import java.util.*;
 
-/**
- * 
- */
 public class Manager extends Employee {
 
-    /**
-     * Default constructor
-     */
+    private ManagerType type;
+    private List<String> news = new ArrayList<>();
+    private List<Course> managedCourses = new ArrayList<>();
+
     public Manager(String id, String firstName, String lastName, String email, String password) {
         super(id, firstName, lastName, email, password, enums.UserRole.MANAGER, 0);
     }
 
-    /**
-     * 
-     */
-    private ManagerType type;
-
-    /**
-     * 
-     */
-    private List<String> news;
-
-    /**
-     * 
-     */
-    private List<Course> managedCourses;
-
-
-    /**
-     * @param student 
-     * @param course 
-     * @return
-     */
     public void approveRegistration(Student student, Course course) {
-        // TODO implement here
-        return null;
+        try {
+            student.registerCourse(course);
+        } catch (Exception e) {
+            System.err.println("Failed to approve registration: " + e.getMessage());
+        }
     }
 
-    /**
-     * @param Course c 
-     * @param Teacher t 
-     * @return
-     */
-    public void assignTeacher(void Course c, void Teacher t) {
-        // TODO implement here
-        return null;
+    public void assignTeacher(Course c, Teacher t) {
+        if (c != null && t != null) {
+            c.addTeacher(t);
+        }
     }
 
-    /**
-     * @return
-     */
     public String createReport() {
-        // TODO implement here
-        return "";
+        return "Report created by Manager " + getFullName();
     }
 
-    /**
-     * @return
-     */
     public void manageNews() {
-        // TODO implement here
-        return null;
+        // Implementation placeholder
     }
 
-    /**
-     * @param course 
-     * @param major 
-     * @param year 
-     * @return
-     */
-    public void addCourseForRegistration(Course course, String major, StudentYear year) {
-        // TODO implement here
-        return null;
+    public void addCourseForRegistration(Course course, String major, int year) {
+        if (course != null) {
+            managedCourses.add(course);
+        }
     }
 
-    /**
-     * @param teacher 
-     * @param course 
-     * @return
-     */
     public void assignTeacherToCourse(Teacher teacher, Course course) {
-        // TODO implement here
-        return null;
+        if (course != null && teacher != null) {
+            course.addTeacher(teacher);
+        }
     }
 
-    /**
-     * @param news 
-     * @return
-     */
-    public void addNews(String news) {
-        // TODO implement here
-        return null;
+    public void addNews(String newsItem) {
+        news.add(newsItem);
     }
 
-    /**
-     * @param comparator 
-     * @return
-     */
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
-        // TODO implement here
-        return null;
+        // Implementation placeholder
+        return new ArrayList<>();
     }
 
-    /**
-     * @return
-     */
     public List<Teacher> viewAllTeachers() {
-        // TODO implement here
-        return null;
+        // Implementation placeholder
+        return new ArrayList<>();
     }
 
-    /**
-     * @return
-     */
     public List<Request> viewRequests() {
-        // TODO implement here
-        return null;
+        // Implementation placeholder
+        return new ArrayList<>();
     }
 
-    /**
-     * @param request 
-     * @return
-     */
     public void approveRequest(Request request) {
-        // TODO implement here
-        return null;
+        if (request != null) {
+            request.setStatus(enums.RequestStatus.APPROVED);
+        }
     }
 
 }

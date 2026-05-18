@@ -25,9 +25,20 @@ public class Mark implements Serializable {
         return firstAttestation + secondAttestation + finalExam;
     }
 
+    public void setAttendedLessons(int attendedLessons) {
+        this.attendedLessons = attendedLessons;
+    }
+
+    public void setTotalLessons(int totalLessons) {
+        this.totalLessons = totalLessons;
+    }
+
     public boolean isFailed() {
+        if (totalLessons == 0) {
+            return finalExam < 20;
+        }
         double attendanceRate = (double) attendedLessons / totalLessons;
-        // Завалил, если финал < 50 или посещаемость < 70% (пропустил > 30%)
+        // Завалил, если финал < 20 или посещаемость < 70% (пропустил > 30%)
         return finalExam < 20 || attendanceRate < 0.7; 
     }
 

@@ -1,72 +1,40 @@
 package users;
 
+import core.Employee;
 import core.User;
-
+import core.Database;
 import java.util.*;
 
-/**
- * 
- */
 public class Admin extends Employee {
 
-    /**
-     * Default constructor
-     */
+    private List<String> logs = new ArrayList<>();
+
     public Admin(String id, String firstName, String lastName, String email, String password) {
         super(id, firstName, lastName, email, password, enums.UserRole.ADMIN, 0);
     }
 
-    /**
-     * 
-     */
-    private List<String> logs;
-
-    /**
-     * 
-     */
-    private List<String> logs;
-
-    /**
-     * @param user 
-     * @return
-     */
     public void addUser(User user) {
-        // TODO implement here
-        return null;
+        Database.getInstance().addUser(user);
+        logs.add("Added user: " + (user != null ? user.getFullName() : "null"));
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void removeUser(User user) {
-        // TODO implement here
-        return null;
+        if (user != null) {
+            Database.getInstance().removeUser(user.getUserId());
+            logs.add("Removed user: " + user.getFullName());
+        }
     }
 
-    /**
-     * @param user 
-     * @return
-     */
     public void updateUser(User user) {
-        // TODO implement here
-        return null;
+        // Update user placeholder logic
+        logs.add("Updated user: " + (user != null ? user.getFullName() : "null"));
     }
 
-    /**
-     * @return
-     */
     public List<User> getAllUsers() {
-        // TODO implement here
-        return null;
+        return Database.getInstance().getUsers();
     }
 
-    /**
-     * @return
-     */
-    public List<Log> viewLogs() {
-        // TODO implement here
-        return null;
+    public List<String> viewLogs() {
+        return logs;
     }
-
 }

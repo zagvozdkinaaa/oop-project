@@ -1,108 +1,59 @@
 package academic;
 
 import enums.LessonType;
-
+import users.Teacher;
+import users.Student;
 import java.util.*;
 
-/**
- * 
- */
 public class Lesson {
 
-    /**
-     * Default constructor
-     */
+    private String lessonId;
+    private Course course;
+    private LessonType type;
+    private Date date;
+    private String room;
+    private Teacher teacher;
+    private int duration;
+
+    private Map<Student, Boolean> attendanceList = new HashMap<>();
+
     public Lesson() {
     }
 
-    /**
-     * 
-     */
-    private String lessonId;
-
-    /**
-     * 
-     */
-    private Course course;
-
-    /**
-     * 
-     */
-    private LessonType type;
-
-    /**
-     * 
-     */
-    private Date date;
-
-    /**
-     * 
-     */
-    private String room;
-
-    /**
-     * 
-     */
-    private Teacher teacher;
-
-    /**
-     * 
-     */
-    private int duration;
-
-    /**
-     * 
-     */
-    public void Attribute1;
-
-
-
-    /**
-     * @return
-     */
-    public String getLessonId() {
-        // TODO implement here
-        return "";
+    public Lesson(String lessonId, Course course, LessonType type, Date date, String room, Teacher teacher, int duration) {
+        this.lessonId = lessonId;
+        this.course = course;
+        this.type = type;
+        this.date = date;
+        this.room = room;
+        this.teacher = teacher;
+        this.duration = duration;
     }
 
-    /**
-     * @return
-     */
-    public LessonType getType() {
-        // TODO implement here
-        return null;
+    public String getLessonId() { return lessonId; }
+    public Course getCourse() { return course; }
+    public void setCourse(Course course) { this.course = course; }
+    public LessonType getType() { return type; }
+    public Date getDate() { return date; }
+    public String getRoom() { return room; }
+    public Teacher getTeacher() { return teacher; }
+    public int getDuration() { return duration; }
+
+    public void setAttendance(Student student, boolean isPresent) {
+        attendanceList.put(student, isPresent);
     }
 
-    /**
-     * @return
-     */
-    public Date getDate() {
-        // TODO implement here
-        return null;
+    public boolean wasPresent(Student student) {
+        return attendanceList.getOrDefault(student, false);
     }
 
-    /**
-     * @return
-     */
-    public String getRoom() {
-        // TODO implement here
-        return "";
-    }
-
-    /**
-     * @return
-     */
+    @Override
     public String toString() {
-        // TODO implement here
-        return "";
+        return "Lesson{" +
+                "lessonId='" + lessonId + '\'' +
+                ", course=" + (course != null ? course.getName() : "null") +
+                ", type=" + type +
+                ", room='" + room + '\'' +
+                '}';
     }
-
-    /**
-     * @return
-     */
-    public String toString() {
-        // TODO implement here
-        return "";
-    }
-
 }
