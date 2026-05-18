@@ -1022,6 +1022,7 @@ public class MenuController {
             System.out.println("4. My Transcript");
             System.out.println("5. Request Research Supervisor");
             System.out.println("6. My Research Papers");
+            System.out.println("7. My Notifications");
             System.out.println("0. Back");
 
             int choice = readInt();
@@ -1092,6 +1093,18 @@ public class MenuController {
 
                 case 6 ->
                         student.printPapers(ResearchPaper.byDateDesc());
+
+                case 7 -> {
+                    List<String> notifications = student.getNotifications();
+                    if (notifications == null || notifications.isEmpty()) {
+                        System.out.println("No new notifications.");
+                    } else {
+                        System.out.println("\n=== My Notifications ===");
+                        for (int i = 0; i < notifications.size(); i++) {
+                            System.out.println((i + 1) + ". [News] " + notifications.get(i));
+                        }
+                    }
+                }
 
                 default -> System.out.println("Invalid choice!");
             }

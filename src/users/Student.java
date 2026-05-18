@@ -11,7 +11,7 @@ import research.Researcher;
 import communication.Request;
 import java.util.*;
 
-public class Student extends User implements Researcher, Comparable<Student> {
+public class Student extends User implements Researcher, Comparable<Student>, communication.Observer {
     private static final long serialVersionUID = 9L;
 
     private double gpa;
@@ -26,6 +26,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
     private List<ResearchPaper> researchPapers;
     private List<ResearchProject> researchProjects;
     private boolean isResearcher;
+    private List<String> notifications;
 
     public Student(String id, String firstName, String lastName, String email, String password, String major, int year) {
         super(id, firstName, lastName, email, password, enums.UserRole.STUDENT);
@@ -40,6 +41,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
         this.researchProjects = new ArrayList<>();
         this.isResearcher = false;
         this.failCount = 0;
+        this.notifications = new ArrayList<>();
     }
 
     public void registerCourse(Course course) throws Exception {
@@ -228,6 +230,21 @@ public class Student extends User implements Researcher, Comparable<Student> {
     @Override
     public boolean isResearcher() {
         return this.isResearcher;
+    }
+
+    @Override
+    public void update(String newsMessage) {
+        if (this.notifications == null) {
+            this.notifications = new ArrayList<>();
+        }
+        this.notifications.add(newsMessage);
+    }
+
+    public List<String> getNotifications() {
+        if (this.notifications == null) {
+            this.notifications = new ArrayList<>();
+        }
+        return this.notifications;
     }
 
     @Override
