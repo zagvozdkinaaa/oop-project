@@ -3,12 +3,13 @@ package exceptions;
 /**
  * 
  */
-public class LowHIndexException {
+public class LowHIndexException extends Exception {
 
     /**
      * Default constructor
      */
     public LowHIndexException() {
+        super();
     }
 
     /**
@@ -26,15 +27,17 @@ public class LowHIndexException {
      * @param required
      */
     public LowHIndexException(int actual, int required) {
-        // TODO implement here
+        super("Low h-index: " + actual + " (required: " + required + ")");
+        this.actualHIndex = actual;
+        this.requiredHIndex = required;
     }
 
-    /**
-     * @return
-     */
-    public String getMessage() {
-        // TODO implement here
-        return "";
+    public int getRequiredHIndex() {
+        return requiredHIndex;
+    }
+
+    public int getActualHIndex() {
+        return actualHIndex;
     }
 
 }

@@ -3,14 +3,15 @@ package users;
 import academic.Course;
 import academic.Mark;
 import academic.Transcript;
+import core.Database;
 import core.User;
-import enums.UserRole;
 import research.ResearchPaper;
 import research.ResearchProject;
 import research.Researcher;
+import communication.Request;
 import java.util.*;
 
-public class Student extends User implements Researcher, Comparable<Student> {
+public class Student extends User implements Researcher, Comparable<Student>, communication.Observer {
     private static final long serialVersionUID = 9L;
 
     private double gpa;
@@ -25,6 +26,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
     private List<ResearchPaper> researchPapers;
     private List<ResearchProject> researchProjects;
     private boolean isResearcher;
+    private List<String> notifications;
 
     public Student(String id, String firstName, String lastName, String email, String password, String major, int year) {
         super(id, firstName, lastName, email, password, enums.UserRole.STUDENT);
@@ -39,25 +41,36 @@ public class Student extends User implements Researcher, Comparable<Student> {
         this.researchProjects = new ArrayList<>();
         this.isResearcher = false;
         this.failCount = 0;
+        this.notifications = new ArrayList<>();
     }
 
-    public void registerCourse(Course course) throws exceptions.CreditLimitExceededException, exceptions.CourseRegistrationClosedException, exceptions.AlreadyEnrolledException, exceptions.MaxStudentsExceededException {
+    public void registerCourse(Course course) throws Exception {
+
         if (course == null) return;
 
         int totalCredits = this.credits + course.getCredits();
+
         if (totalCredits > 21) {
-            throw new exceptions.CreditLimitExceededException(totalCredits);
+            throw new RuntimeException("Credit limit exceeded");
         }
 
-        if (this.courses == null) this.courses = new ArrayList<>();
-        this.courses.add(course);
-        this.credits = totalCredits;
         course.addStudent(this);
+
+        if (!this.courses.contains(course)) {
+            this.courses.add(course);
+            this.credits = totalCredits;
+        }
+
+        Database.getInstance().save(); 
     }
 
     public void dropCourse(Course course) {
         if (this.courses != null) {
             this.courses.remove(course);
+        }
+
+        if (course != null) {
+            course.getEnrolledStudents().remove(this);
         }
     }
     public List<Course> viewCourses() {
@@ -93,8 +106,77 @@ public class Student extends User implements Researcher, Comparable<Student> {
         return credits;
     }
 
-    public void setSupervisor(Teacher teacher) {
-        this.supervisor = (Researcher) teacher;
+    
+    public Request requestSupervisor(Teacher teacher) throws exceptions.LowHIndexException {
+        if (teacher == null) {
+            throw new IllegalArgumentException("Teacher cannot be null");
+        }
+
+        if (this.year != 4) {
+            throw new IllegalArgumentException("Supervisor can only be assigned to 4th year students");
+        }
+
+        if (!(teacher instanceof Researcher)) {
+            throw new IllegalArgumentException("Supervisor must be a Researcher");
+        }
+
+        Researcher researcher = (Researcher) teacher;
+        if (!researcher.isResearcher()) {
+            throw new IllegalArgumentException("Supervisor must be an active Researcher");
+        }
+        if (researcher.getHIndex() < 3) {
+            throw new exceptions.LowHIndexException(researcher.getHIndex(), 3);
+        }
+
+        String description = String.format(
+            "Student %s (%s) requests supervisor appointment for teacher %s. Major: %s, Year: %d",
+            this.getFullName(), this.getUserId(), teacher.getFullName(), this.major, this.year
+        );
+
+        Request req = new Request(this, description, "SUPERVISOR", teacher);
+        core.Database.getInstance().addRequest(req);
+        return req;
+    }
+
+    
+    protected void assignSupervisor(Teacher teacher) throws exceptions.LowHIndexException {
+        if (teacher == null) {
+            throw new IllegalArgumentException("Teacher cannot be null");
+        }
+
+        if (!(teacher instanceof Researcher)) {
+            throw new IllegalArgumentException("Supervisor must be a Researcher");
+        }
+
+        Researcher researcher = (Researcher) teacher;
+        if (!researcher.isResearcher()) {
+            throw new IllegalArgumentException("Supervisor must be an active Researcher");
+        }
+        if (researcher.getHIndex() < 3) {
+            throw new exceptions.LowHIndexException(researcher.getHIndex(), 3);
+        }
+
+        this.supervisor = researcher;
+    }
+
+    public Request requestCourseRegistration(Course course) {
+
+        String description = "Request to register for course: " + course.getName();
+
+        Request req = new Request(
+            this,
+            description,
+            "COURSE_REGISTRATION",
+            null
+        );
+
+        Database.getInstance().addRequest(req);
+
+        return req;
+    }
+    @Deprecated
+    public void setSupervisor(Teacher teacher) throws exceptions.LowHIndexException {
+        assignSupervisor(teacher);
     }
 
     public Teacher getSupervisor() {
@@ -115,6 +197,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
     public void addResearchPaper(ResearchPaper paper) {
         if (this.researchPapers == null) this.researchPapers = new ArrayList<>();
         this.researchPapers.add(paper);
+        this.isResearcher = true;
     }
 
     @Override
@@ -126,6 +209,7 @@ public class Student extends User implements Researcher, Comparable<Student> {
     public void addResearchProject(ResearchProject project) {
         if (this.researchProjects == null) this.researchProjects = new ArrayList<>();
         this.researchProjects.add(project);
+        this.isResearcher = true;
     }
 
     @Override
@@ -141,6 +225,26 @@ public class Student extends User implements Researcher, Comparable<Student> {
     @Override
     public int compareTo(Student other) {
         return Double.compare(other.getGpa(), this.getGpa());
+    }
+
+    @Override
+    public boolean isResearcher() {
+        return this.isResearcher;
+    }
+
+    @Override
+    public void update(String newsMessage) {
+        if (this.notifications == null) {
+            this.notifications = new ArrayList<>();
+        }
+        this.notifications.add(newsMessage);
+    }
+
+    public List<String> getNotifications() {
+        if (this.notifications == null) {
+            this.notifications = new ArrayList<>();
+        }
+        return this.notifications;
     }
 
     @Override

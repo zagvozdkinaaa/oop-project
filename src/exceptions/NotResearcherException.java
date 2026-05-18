@@ -3,27 +3,20 @@ package exceptions;
 /**
  * 
  */
-public class NotResearcherException {
+public class NotResearcherException extends Exception {
 
     /**
      * Default constructor
      */
     public NotResearcherException() {
+        super();
     }
 
     /**
-     * @param user
+     * @param message
      */
-    public NotResearcherException(void user) {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    public String getMessage() {
-        // TODO implement here
-        return "";
+    public NotResearcherException(String message) {
+        super(message);
     }
 
 }

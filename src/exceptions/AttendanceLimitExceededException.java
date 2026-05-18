@@ -5,6 +5,6 @@ import users.Student;
 public class AttendanceLimitExceededException extends Exception {
 
     public AttendanceLimitExceededException(Student student) {
-        super("Attendance limit exceeded for student: " + student.getName());
+        super("Attendance limit exceeded for student: " + student.getFullName());
     }
 }

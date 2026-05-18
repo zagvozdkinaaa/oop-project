@@ -1,11 +1,7 @@
-package services;
+package users;
 
 import core.User;
 import enums.UserRole;
-import users.Admin;
-import users.Manager;
-import users.Student;
-import users.Teacher;
 
 import java.util.*;
 
@@ -33,7 +29,11 @@ public class UserFactory {
 
         return switch (role) {
             case ADMIN -> new Admin(id, firstName, lastName, email, password, salary);
-            case STUDENT -> new Student(id, firstName, lastName, email, password);
+            case STUDENT -> {
+                String major = (String) data.getOrDefault("major", "Undeclared");
+                int year = (int) data.getOrDefault("year", 1);
+                yield new Student(id, firstName, lastName, email, password, major, year);
+            }
             case TEACHER -> {
                 enums.TeacherPosition position = (enums.TeacherPosition) data.getOrDefault("position", enums.TeacherPosition.TUTOR);
                 yield new Teacher(id, firstName, lastName, email, password, salary,  position);

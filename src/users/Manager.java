@@ -1,6 +1,5 @@
 package users;
 
-import core.Database;
 import core.Employee;
 import academic.Course;
 import enums.ManagerType;
@@ -10,22 +9,25 @@ import enums.RequestStatus;
 import exceptions.AlreadyEnrolledException;
 import exceptions.CourseRegistrationClosedException;
 import exceptions.MaxStudentsExceededException;
-import services.Request;
+import communication.Request;
+import communication.Subject;
+import communication.Observer;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class Manager extends Employee {
+public class Manager extends Employee implements Subject {
     private static final long serialVersionUID = 8L;
 
     private ManagerType type;
     private List<String> news;
     private List<Course> managedCourses;
+    private transient List<Observer> observers;
 
     public Manager(String id, String firstName, String lastName, String email, String password, ManagerType type, double salary) {
         super(id, firstName, lastName, email, password, UserRole.MANAGER, salary);
         this.type = type;
         this.news = new ArrayList<>();
         this.managedCourses = new ArrayList<>();
+        this.observers = new ArrayList<>();
     }
 
     public void approveRegistration(Student student, Course course) throws MaxStudentsExceededException, AlreadyEnrolledException, CourseRegistrationClosedException {
@@ -46,7 +48,9 @@ public class Manager extends Employee {
             course.setOpenForRegistration(true);
         }
     }
-
+    
+ 
+    
     public void manageNews() {
         System.out.println("Current news count: " + (news != null ? news.size() : 0));
     }
@@ -54,8 +58,55 @@ public class Manager extends Employee {
     public void addNews(String news) {
         if (this.news == null) this.news = new ArrayList<>();
         this.news.add(news);
+        notifyObservers(news);
     }
 
+    @Override
+    public void registerObserver(Observer o) {
+        if (this.observers == null) {
+            this.observers = new ArrayList<>();
+        }
+        if (o != null && !this.observers.contains(o)) {
+            this.observers.add(o);
+        }
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        if (this.observers != null && o != null) {
+            this.observers.remove(o);
+        }
+    }
+
+    @Override
+    public void notifyObservers(String newsMessage) {
+        if (this.observers == null) {
+            this.observers = new ArrayList<>();
+        }
+        if (this.observers.isEmpty()) {
+            for (core.User u : core.Database.getInstance().getUsers()) {
+                if (u instanceof Observer) {
+                    registerObserver((Observer) u);
+                }
+            }
+        }
+        for (Observer o : this.observers) {
+            o.update(newsMessage);
+        }
+    }
+
+    public void openCourse(Course course) {
+        if (course != null) {
+            course.setOpenForRegistration(true);
+        }
+    }
+
+    public void closeCourse(Course course) {
+        if (course != null) {
+            course.setOpenForRegistration(false);
+        }
+    }
+    
     public List<Student> viewAllStudents(Comparator<Student> comparator) {
         List<Student> students = new ArrayList<>();
         for (core.User u : core.Database.getInstance().getUsers()) {
@@ -87,7 +138,7 @@ public class Manager extends Employee {
     }
 
     public List<Request> viewRequests() {
-        return new ArrayList<>(); // Request storage in Database
+        return new ArrayList<>(); 
     }
 
     public String createReport() {
@@ -98,4 +149,4 @@ public class Manager extends Employee {
     public String toString() {
         return super.toString() + " | Type: " + type;
     }
-}
+}	
