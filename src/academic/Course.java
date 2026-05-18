@@ -40,6 +40,10 @@ public class Course implements Serializable {
         return courseId;
     }
 
+    public String getCode() {
+        return code;
+    }
+
     public List<Lesson> getLessons() {
         return lessons;
     }
@@ -111,6 +115,26 @@ public class Course implements Serializable {
 
     public int getStudentCount() {
         return enrolledStudents.size();
+    }
+
+    public double getAttendancePercentage(Student student) {
+        if (lessons == null || lessons.isEmpty()) {
+            return 100.0;
+        }
+        long totalLessons = 0;
+        long presentLessons = 0;
+        for (Lesson lesson : lessons) {
+            if (lesson.getAttendance() != null && lesson.getAttendance().containsKey(student)) {
+                totalLessons++;
+                if (lesson.getAttendance().get(student)) {
+                    presentLessons++;
+                }
+            }
+        }
+        if (totalLessons == 0) {
+            return 100.0;
+        }
+        return ((double) presentLessons / totalLessons) * 100.0;
     }
 
     @Override

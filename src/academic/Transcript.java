@@ -42,6 +42,10 @@ public class Transcript implements Serializable{
         return calculateGpa();
     }
 
+    public List<Mark> getMarks() {
+        return marks;
+    }
+
     public void generate(Student student) {
         this.student = student;
         this.generatedDate = new Date();

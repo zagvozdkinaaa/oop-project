@@ -13,6 +13,8 @@ import users.UserFactory;
 import java.util.*;
 
 import academic.Course;
+import academic.Lesson;
+import enums.LessonType;
 import core.IdGenerator;
 
 public class MenuController {
@@ -806,6 +808,7 @@ public class MenuController {
             System.out.println("7. Assign Course to Me");
             System.out.println("8. Add Citation to Paper");
             System.out.println("9. Add Research Paper");
+            System.out.println("10. Manage Attendance");
             System.out.println("0. Back");
 
             int choice = readInt();
@@ -1004,6 +1007,7 @@ public class MenuController {
                 case 7 -> assignCourseToTeacher(teacher);
                 case 8 -> addCitationUI(teacher);
                 case 9 -> addResearchPaperUI(teacher);
+                case 10 -> manageAttendanceUI(teacher);
 
                 default -> System.out.println("Invalid choice!");
             }
@@ -1023,6 +1027,7 @@ public class MenuController {
             System.out.println("5. Request Research Supervisor");
             System.out.println("6. My Research Papers");
             System.out.println("7. My Notifications");
+            System.out.println("8. Attendance Report");
             System.out.println("0. Back");
 
             int choice = readInt();
@@ -1105,12 +1110,201 @@ public class MenuController {
                         }
                     }
                 }
+                case 8 -> showAttendanceReportUI(student);
 
                 default -> System.out.println("Invalid choice!");
             }
 
             pause();
         }
+    }
+
+    private static void manageAttendanceUI(Teacher teacher) {
+        List<Course> courses = teacher.getCourses();
+        if (courses == null || courses.isEmpty()) {
+            System.out.println("No courses assigned to you.");
+            return;
+        }
+
+        System.out.println("\n=== Select Course for Attendance ===");
+        for (int i = 0; i < courses.size(); i++) {
+            System.out.println((i + 1) + ". " + courses.get(i).getName() + " (" + courses.get(i).getCode() + ")");
+        }
+        System.out.print("Select course (0 to cancel): ");
+        int courseIdx = readInt() - 1;
+        if (courseIdx < 0 || courseIdx >= courses.size()) {
+            return;
+        }
+
+        Course selectedCourse = courses.get(courseIdx);
+        List<Lesson> lessons = selectedCourse.getLessons();
+
+        while (true) {
+            System.out.println("\n=== Lessons for " + selectedCourse.getName() + " ===");
+            if (lessons == null || lessons.isEmpty()) {
+                System.out.println("No lessons created yet.");
+            } else {
+                for (int i = 0; i < lessons.size(); i++) {
+                    Lesson lesson = lessons.get(i);
+                    int markedCount = 0;
+                    if (lesson.getAttendance() != null) {
+                        markedCount = lesson.getAttendance().size();
+                    }
+                    System.out.println((i + 1) + ". " + lesson.getType() + 
+                                       " | Room: " + lesson.getRoom() + 
+                                       " | Date: " + new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm").format(lesson.getDate()) +
+                                       " | Attendance: " + markedCount + "/" + selectedCourse.getStudentCount());
+                }
+            }
+
+            System.out.println("\nSelect lesson number to mark/edit attendance,");
+            System.out.println("'N' to create a new lesson, or '0' to go back.");
+            System.out.print("Your choice: ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equals("0")) {
+                break;
+            }
+
+            if (input.equalsIgnoreCase("N")) {
+                // Create a new lesson
+                System.out.println("\n--- Create New Lesson ---");
+                System.out.println("1. Lecture");
+                System.out.println("2. Practice");
+                System.out.print("Select type: ");
+                int typeChoice = readInt();
+                LessonType type;
+                int duration;
+                if (typeChoice == 1) {
+                    type = LessonType.LECTURE;
+                    duration = LessonType.LECTURE.getDefaultDuration();
+                } else if (typeChoice == 2) {
+                    type = LessonType.PRACTICE;
+                    duration = LessonType.PRACTICE.getDefaultDuration();
+                } else {
+                    System.out.println("Invalid lesson type choice.");
+                    continue;
+                }
+
+                System.out.print("Enter Room: ");
+                String room = scanner.nextLine().trim();
+                if (room.isEmpty()) {
+                    System.out.println("Room cannot be empty.");
+                    continue;
+                }
+
+                String lessonId = "L" + UUID.randomUUID().toString().substring(0, 8);
+                Lesson newLesson = new Lesson(lessonId, selectedCourse, type, new Date(), room, teacher, duration);
+                selectedCourse.addLesson(newLesson);
+                System.out.println("Lesson created successfully!");
+
+                System.out.print("Mark attendance for this new lesson now? (y/n): ");
+                String ans = scanner.nextLine().trim();
+                if (ans.equalsIgnoreCase("y")) {
+                    markLessonAttendance(newLesson, selectedCourse);
+                }
+                Database.getInstance().save();
+            } else {
+                try {
+                    int lessonIdx = Integer.parseInt(input) - 1;
+                    if (lessonIdx >= 0 && lessonIdx < lessons.size()) {
+                        Lesson selectedLesson = lessons.get(lessonIdx);
+                        markLessonAttendance(selectedLesson, selectedCourse);
+                        Database.getInstance().save();
+                    } else {
+                        System.out.println("Invalid lesson number.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid option.");
+                }
+            }
+        }
+    }
+
+    private static void markLessonAttendance(Lesson lesson, Course course) {
+        List<Student> enrolled = course.getEnrolledStudents();
+        if (enrolled == null || enrolled.isEmpty()) {
+            System.out.println("No students enrolled in this course.");
+            return;
+        }
+
+        System.out.println("\n--- Mark Attendance for " + lesson.getType() + " ---");
+        for (Student student : enrolled) {
+            while (true) {
+                System.out.print("Is " + student.getFullName() + " (" + student.getUserId() + ") present? (y/n): ");
+                String response = scanner.nextLine().trim().toLowerCase();
+                if (response.equals("y")) {
+                    lesson.markAttendance(student, true);
+                    break;
+                } else if (response.equals("n")) {
+                    lesson.markAttendance(student, false);
+                    break;
+                } else {
+                    System.out.println("Please enter 'y' for present or 'n' for absent.");
+                }
+            }
+
+            // Update the student's marks in the transcript for any attendance-triggered retakes
+            if (student.viewTranscript() != null && student.viewTranscript().getMarks() != null) {
+                double attendancePercent = course.getAttendancePercentage(student);
+                if (attendancePercent < 70.0) {
+                    System.out.println("⚠️ Warning: " + student.getFullName() + "'s attendance is low (" + 
+                                       String.format("%.1f", attendancePercent) + "%). Retake required!");
+                }
+                for (Mark m : student.viewTranscript().getMarks()) {
+                    if (m.getCourse() != null && m.getCourse().getCourseId().equals(course.getCourseId())) {
+                        m.checkRetake(attendancePercent);
+                    }
+                }
+            }
+        }
+        System.out.println("Attendance updated successfully!");
+    }
+
+    private static void showAttendanceReportUI(Student student) {
+        List<Course> enrolled = student.viewCourses();
+        if (enrolled == null || enrolled.isEmpty()) {
+            System.out.println("You are not registered in any courses.");
+            return;
+        }
+
+        System.out.println("\n================================ ATTENDANCE REPORT ================================");
+        System.out.printf("%-10s | %-25s | %-12s | %-12s | %-12s | %-10s\n", 
+                          "Course ID", "Course Name", "Total Lessons", "Present", "Absent", "Status");
+        System.out.println("----------------------------------------------------------------------------------");
+
+        for (Course course : enrolled) {
+            List<Lesson> lessons = course.getLessons();
+            int totalLessons = 0;
+            int present = 0;
+            int absent = 0;
+
+            if (lessons != null) {
+                for (Lesson lesson : lessons) {
+                    if (lesson.getAttendance() != null && lesson.getAttendance().containsKey(student)) {
+                        totalLessons++;
+                        if (lesson.getAttendance().get(student)) {
+                            present++;
+                        } else {
+                            absent++;
+                        }
+                    }
+                }
+            }
+
+            double percent = course.getAttendancePercentage(student);
+            String status = percent >= 70.0 ? "OK" : "RETAKE REQUIRED";
+
+            System.out.printf("%-10s | %-25s | %-12d | %-12d | %-12d | %-10s (%.1f%%)\n", 
+                              course.getCourseId(), 
+                              course.getName().length() > 25 ? course.getName().substring(0, 22) + "..." : course.getName(), 
+                              totalLessons, 
+                              present, 
+                              absent, 
+                              status, 
+                              percent);
+        }
+        System.out.println("==================================================================================");
     }
 
     private static int readInt() {

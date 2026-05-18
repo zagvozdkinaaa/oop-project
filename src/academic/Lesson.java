@@ -6,7 +6,8 @@ import users.Teacher;
 
 import java.util.*;
 
-public class Lesson {
+public class Lesson implements java.io.Serializable {
+    private static final long serialVersionUID = 12L;
 
     private String lessonId;
     private Course course;
@@ -71,6 +72,10 @@ public class Lesson {
         return attendance.entrySet().stream()
                 .filter(e -> e.getKey().equals(student) && !e.getValue())
                 .count();
+    }
+
+    public Map<Student, Boolean> getAttendance() {
+        return attendance;
     }
 
     @Override
