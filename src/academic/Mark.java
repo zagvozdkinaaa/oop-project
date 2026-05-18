@@ -1,6 +1,7 @@
 package academic;
 
 import users.Student;
+import exceptions.AttendanceLimitExceededException;
 import exceptions.InvalidMarkException;
 
 public class Mark {
@@ -8,15 +9,13 @@ public class Mark {
     private String markId;
     private Student student;
     private Course course;
-
     private double firstAttestation;
     private double secondAttestation;
     private double finalExam;
-
     private double total;
-
     private boolean retakeRequired;
 
+    
     public Mark(String markId, Student student, Course course,
             double firstAttestation, double secondAttestation, double finalExam)
             throws InvalidMarkException {
@@ -33,27 +32,27 @@ public class Mark {
         this.finalExam = finalExam;
 
         this.retakeRequired = false;
-
         this.total = calculateTotal();
     }
 
+    
     private void validate(double value) throws InvalidMarkException {
         if (value < 0 || value > 100) {
             throw new InvalidMarkException(value);
         }
     }
 
-    public void checkRetake(double attendancePercent) {
+    public void checkRetake(double attendancePercent)
+        throws AttendanceLimitExceededException {
 
-        if (attendancePercent < 70) {
+    if (attendancePercent < 70) {
+        retakeRequired = true;
+        finalExam = 0;
+        calculateTotal();
 
-            retakeRequired = true;
-
-            finalExam = 0;
-
-            calculateTotal();
-        }
+        throw new AttendanceLimitExceededException(student);
     }
+}
 
     public boolean isRetakeRequired() {
         return retakeRequired;
@@ -77,7 +76,8 @@ public class Mark {
         if (retakeRequired)
             return "F";
 
-        double t = Math.max(0, Math.min(100, total));
+        
+        double t = Math.max(0, Math.min(100, total)); 
 
         if (t >= 95)
             return "A";
