@@ -59,6 +59,10 @@ public class Mark {
         return retakeRequired;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
     public double calculateTotal() {
         total = firstAttestation + secondAttestation + finalExam;
         return total;
